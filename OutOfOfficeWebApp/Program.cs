@@ -13,23 +13,20 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     cookieOptions.AccessDeniedPath = "/Forbidden";
     cookieOptions.Cookie.SameSite = SameSiteMode.None;
 
-    // cookieOptions.Events.OnRedirectToAccessDenied = 
     cookieOptions.Events.OnRedirectToLogin = ctx =>
     {
-        if (ctx.Request.Path.StartsWithSegments("/api"))
-        {
-            ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
-        }
-        else
-        {
-            ctx.Response.Redirect(cookieOptions.LoginPath);
-        }
+        ctx.Response.Redirect(cookieOptions.LoginPath);
         return Task.FromResult(0);
     };
 });
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages()
+        .AddRazorPagesOptions(options =>
+        {
+            options.RootDirectory = "/Lists";
+        });
+
 
 builder.Services.AddAuthorization(options =>
 {
@@ -72,7 +69,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-/*using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var service = scope.ServiceProvider;
     var dbContext = service.GetService<AppDbContext>();
@@ -83,6 +80,7 @@ app.MapRazorPages();
     dbContext?.RequestStatuses.SeedEnumValues<RequestStatus, RequestStatusEnum>(@enum => @enum);
     dbContext?.Roles.SeedEnumValues<Role, RoleEnum>(@enum => @enum);
     dbContext?.Subdivisions.SeedEnumValues<Subdivision, SubdivisionEnum>(@enum => @enum);
-}*/
+    dbContext?.SaveChanges();
+}
 
 app.Run();

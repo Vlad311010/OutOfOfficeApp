@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace OutOfOfficeWebApp.Pages
+namespace OutOfOfficeWebApp.Lists
 {
     public class IndexModel : PageModel
     {
