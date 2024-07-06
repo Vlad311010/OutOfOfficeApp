@@ -2,7 +2,9 @@ using app.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using OutOfOfficeWebApp;
+using OutOfOfficeWebApp.Interfaces;
 using OutOfOfficeWebApp.Models.Enums;
+using OutOfOfficeWebApp.Repositories;
 using OutOfOfficeWebApp.Utils;
 using System;
 using System.Reflection.Metadata;
@@ -35,6 +37,8 @@ builder.Services.AddAuthorization(options =>
     
 });
 
+builder.Services.AddScoped<IEmployeesRepository, EmployeesRepository>();
+builder.Services.AddScoped<IProjectsRepository, ProjectsRepository>();
 
 
 

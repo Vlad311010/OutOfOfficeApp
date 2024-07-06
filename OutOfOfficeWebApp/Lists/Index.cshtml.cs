@@ -10,42 +10,43 @@ namespace OutOfOfficeWebApp.Lists
 {
     public class IndexModel : PageModel
     {
-        private readonly IEmployeeRepository employeeRepo;
+        private readonly IEmployeesRepository employeeRepo;
         
 
         [BindProperty]
         public int? EmployeeId { get; set; }
 
-        public IndexModel(/*IEmployeeRepository employeeRepo*/)
+        public Employee? Employee { get; private set; }
+
+        public IndexModel(IEmployeesRepository employeeRepo)
         {
             this.employeeRepo = employeeRepo;
-            // _logger = logger;
         }
-
-        public void OnGet()
+        
+        public async Task OnGetAsync()
         {
+            int identificator;
+            if (User.Identity!.IsAuthenticated && Int32.TryParse(HttpContext.User?.FindFirstValue("Identificator"), out identificator))
+            {
+                Employee = await employeeRepo.GetById(identificator);
+            }
         }
 
         public async Task<IActionResult> OnPost()
         {
-           
             if (EmployeeId == null)
                 ModelState.AddModelError(nameof(EmployeeId), "ID Field is required");
-            else 
+
+            int id = EmployeeId ?? default;
+            Employee? employee = await employeeRepo.GetById(id);
+            if (employee == null) {
                 ModelState.AddModelError(nameof(EmployeeId), "Invalid ID");
-            return Page();
-            /*
-            Employee? employee = await employeeRepo.GetById(EmployeeId);
-            if (employee == null)
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                Message = "Invalid login or password";
                 return Page();
             }
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, employee.ID.ToString()),
+                new Claim(type: "Identificator", value: employee.ID.ToString()),
                 new Claim(ClaimTypes.Role, employee.Role.Name),
             };
 
@@ -56,12 +57,16 @@ namespace OutOfOfficeWebApp.Lists
                 AllowRefresh = true,
             };
 
-            Message = "OK";
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
             // success
-            return LocalRedirect(Url.Page("/Public/Index"));
-            */
+            return Redirect("~/");
+        }
+
+        public async Task<IActionResult> OnPostLogoutAsync()
+        {
+            await HttpContext.SignOutAsync();
+            return Redirect("~/");
         }
     }
 }

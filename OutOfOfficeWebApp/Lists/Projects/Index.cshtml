@@ -1,7 +1,37 @@
 ﻿@page "/Projects"
+@using OutOfOfficeWebApp.Models
 @model OutOfOfficeWebApp.Lists.Projects.IndexModel
 @{
     ViewData["Title"] = "Projects";
 }
 
 <h3>Projects Page</h3>
+
+@if (Model.Projects == null || Model.Projects.Count() == 0)
+{
+    <h3>Nothing Here</h3>
+}
+else 
+{
+    <div class="container mt-5">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr class="bg-black text-white">
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Project p in Model.Projects)
+                {
+                    <tr>
+                        <td>@p.ID</td>
+                        <td>@p.ProjectType</td>
+                        <td>@p.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

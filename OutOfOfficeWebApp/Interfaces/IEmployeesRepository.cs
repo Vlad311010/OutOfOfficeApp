@@ -2,7 +2,7 @@
 
 namespace OutOfOfficeWebApp.Interfaces
 {
-    public interface IEmployeeRepository
+    public interface IEmployeesRepository
     {
         Task<IEnumerable<Employee>> All();
         Task<Employee?> GetById(int id);

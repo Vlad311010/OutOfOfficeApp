@@ -4,10 +4,42 @@
     ViewData["Title"] = "Home page";
 }
 
-@if (User.Identity!.IsAuthenticated)
+@if (Model.Employee != null)
 {
-     <div class="text-center">
-        <h1 class="display-4">Welcome Employee @User.Identity!.Name</h1>
+    <div class="container mt-5 w-25">
+        <div class="row justify-content-center">
+            <div class="col form-container">
+                <h2 class="mb-4 text-center">Welcome</h2>
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" value="@Model.Employee.FullName" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="id" class="form-label">ID</label>
+                    <input type="text" class="form-control" id="id" value="@Model.Employee.ID" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="id" class="form-label">Position</label>
+                    <input type="text" class="form-control" id="id" value="@Model.Employee.Position" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="id" class="form-label">People Partner</label>
+                    <input type="text" class="form-control" id="id" value="@Model.Employee.PeoplePartner.FullName" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="id" class="form-label">Subdivision</label>
+                    <input type="text" class="form-control" id="id" value="@Model.Employee.Subdivision" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="id" class="form-label">Out Of Office Balance</label>
+                    <input type="text" class="form-control" id="id" value="@Model.Employee.OutOfOfficeBalance" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="id" class="form-label">Status</label>
+                    <input type="text" class="form-control" id="id" value="@Model.Employee.Status" readonly>
+                </div>
+            </div>
+        </div>
     </div>
 }
 else
