@@ -11,7 +11,7 @@ namespace OutOfOfficeWebApp.Models
 
         [Required, ForeignKey("ProjectType")]
         public int ProjectTypeId { get; set; }
-        public ProjectType ProjectType { get; set; } = new ProjectType(ProjectTypeEnum.Inner);
+        public ProjectType ProjectType { get; set; } = default!;
 
         [Required, Column(TypeName = "Date")]
         public DateTime StartDate { get; set; }
@@ -27,6 +27,6 @@ namespace OutOfOfficeWebApp.Models
 
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }
-        public ActiveStatus Status { get; set; } = new ActiveStatus(ActiveStatusEnum.Incative);
+        public ActiveStatus Status { get; set; } = default!;
     }
 }

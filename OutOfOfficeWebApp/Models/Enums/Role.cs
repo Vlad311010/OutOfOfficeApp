@@ -4,10 +4,10 @@ namespace OutOfOfficeWebApp.Models.Enums
 {
     public enum RoleEnum
     {
-        Employee = 0,
-        ProjectManager = 1,
-        HRManager = 2,
-        Administrator = 3
+        Employee = 1,
+        ProjectManager = 2,
+        HRManager = 3,
+        Administrator = 4
     }
 
     public class Role : EnumTable<RoleEnum>

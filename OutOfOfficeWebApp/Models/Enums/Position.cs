@@ -4,9 +4,9 @@ namespace OutOfOfficeWebApp.Models.Enums
 {
     public enum PositionEnum
     {
-        Employee = 0,
-        ProjectManager = 1,
-        HRManager = 2
+        Employee = 1,
+        ProjectManager = 2,
+        HRManager = 3
     }
 
     public class Position : EnumTable<PositionEnum>

@@ -1,4 +1,5 @@
-﻿using OutOfOfficeWebApp.Models.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using OutOfOfficeWebApp.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,23 +15,19 @@ namespace OutOfOfficeWebApp.Models
 
         [Required, ForeignKey("Subdivision")]
         public int SubdivisionId { get; set; }
-        public Subdivision Subdivision { get; set; } = new Subdivision(SubdivisionEnum.CustomerExperience);
+        public Subdivision Subdivision { get; set; } = default!;
 
         [Required, ForeignKey("Position")]
         public int PositionId { get; set; }
-        public Position Position { get; set; } = new Position(PositionEnum.Employee);
+        public Position Position { get; set; } = default!;
 
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }
-        public ActiveStatus Status { get; set; } = new ActiveStatus(ActiveStatusEnum.Incative);
+        public ActiveStatus Status { get; set; } = default!;
 
         [Required, ForeignKey("PeoplePartner")]
         public int PeoplePartnerId { get; set; }
-        public Employee PeoplePartner { get; set; } = null!;
-
-        [Required, ForeignKey("Project")]
-        public int ProjcetId { get; set; }
-        public Project Project { get; set; } = null!;
+        public virtual Employee PeoplePartner { get; set; } = null!;
 
         [Required]
         public int OutOfOfficeBalance { get; set; }
@@ -39,7 +36,7 @@ namespace OutOfOfficeWebApp.Models
 
         [Required, ForeignKey("Role")]
         public int RoleId { get; set; }
-        public Role Role { get; set; } = new Role(RoleEnum.Employee);
+        public Role Role { get; set; } = default!;
     }
 
 

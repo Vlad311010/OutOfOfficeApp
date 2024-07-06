@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OutOfOfficeWebApp.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -96,27 +96,6 @@ namespace OutOfOfficeWebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ApprovalRequests",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ApproverId = table.Column<int>(type: "int", nullable: false),
-                    LeaveRequestId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApprovalRequests", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_ApprovalRequests_RequestStatuses_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "RequestStatuses",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -127,7 +106,6 @@ namespace OutOfOfficeWebApp.Migrations
                     PositionId = table.Column<int>(type: "int", nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     PeoplePartnerId = table.Column<int>(type: "int", nullable: false),
-                    ProjcetId = table.Column<int>(type: "int", nullable: false),
                     OutOfOfficeBalance = table.Column<int>(type: "int", nullable: false),
                     Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     RoleId = table.Column<int>(type: "int", nullable: false)
@@ -229,6 +207,37 @@ namespace OutOfOfficeWebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApprovalRequests",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApproverId = table.Column<int>(type: "int", nullable: false),
+                    LeaveRequestId = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApprovalRequests", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_ApprovalRequests_Employees_ApproverId",
+                        column: x => x.ApproverId,
+                        principalTable: "Employees",
+                        principalColumn: "ID");
+                    table.ForeignKey(
+                        name: "FK_ApprovalRequests_LeaveRequests_LeaveRequestId",
+                        column: x => x.LeaveRequestId,
+                        principalTable: "LeaveRequests",
+                        principalColumn: "ID");
+                    table.ForeignKey(
+                        name: "FK_ApprovalRequests_RequestStatuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "RequestStatuses",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectEmployees",
                 columns: table => new
                 {
@@ -253,8 +262,7 @@ namespace OutOfOfficeWebApp.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ApprovalRequests_ApproverId",
                 table: "ApprovalRequests",
-                column: "ApproverId",
-                unique: true);
+                column: "ApproverId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApprovalRequests_LeaveRequestId",
@@ -265,122 +273,77 @@ namespace OutOfOfficeWebApp.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ApprovalRequests_StatusId",
                 table: "ApprovalRequests",
-                column: "StatusId",
-                unique: true);
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_PeoplePartnerId",
                 table: "Employees",
-                column: "PeoplePartnerId",
-                unique: true);
+                column: "PeoplePartnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_PositionId",
                 table: "Employees",
-                column: "PositionId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_ProjcetId",
-                table: "Employees",
-                column: "ProjcetId",
-                unique: true);
+                column: "PositionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_RoleId",
                 table: "Employees",
-                column: "RoleId",
-                unique: true);
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_StatusId",
                 table: "Employees",
-                column: "StatusId",
-                unique: true);
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_SubdivisionId",
                 table: "Employees",
-                column: "SubdivisionId",
-                unique: true);
+                column: "SubdivisionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LeaveRequests_AbsenceReasonId",
                 table: "LeaveRequests",
-                column: "AbsenceReasonId",
-                unique: true);
+                column: "AbsenceReasonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LeaveRequests_EmployeeId",
                 table: "LeaveRequests",
-                column: "EmployeeId",
-                unique: true);
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LeaveRequests_StatusId",
                 table: "LeaveRequests",
-                column: "StatusId",
-                unique: true);
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectEmployees_EmployeeId",
                 table: "ProjectEmployees",
-                column: "EmployeeId",
-                unique: true);
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectEmployees_ProjectId",
                 table: "ProjectEmployees",
-                column: "ProjectId",
-                unique: true);
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_ProjectManagerId",
                 table: "Projects",
-                column: "ProjectManagerId",
-                unique: true);
+                column: "ProjectManagerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_ProjectTypeId",
                 table: "Projects",
-                column: "ProjectTypeId",
-                unique: true);
+                column: "ProjectTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_StatusId",
                 table: "Projects",
-                column: "StatusId",
-                unique: true);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_ApprovalRequests_Employees_ApproverId",
-                table: "ApprovalRequests",
-                column: "ApproverId",
-                principalTable: "Employees",
-                principalColumn: "ID");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_ApprovalRequests_LeaveRequests_LeaveRequestId",
-                table: "ApprovalRequests",
-                column: "LeaveRequestId",
-                principalTable: "LeaveRequests",
-                principalColumn: "ID");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Employees_Projects_ProjcetId",
-                table: "Employees",
-                column: "ProjcetId",
-                principalTable: "Projects",
-                principalColumn: "ID");
+                column: "StatusId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Projects_Employees_ProjectManagerId",
-                table: "Projects");
-
             migrationBuilder.DropTable(
                 name: "ApprovalRequests");
 
@@ -389,6 +352,9 @@ namespace OutOfOfficeWebApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "LeaveRequests");
+
+            migrationBuilder.DropTable(
+                name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "AbsenceReasons");
@@ -400,22 +366,19 @@ namespace OutOfOfficeWebApp.Migrations
                 name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Positions");
+                name: "ProjectTypes");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "ActiveStatuses");
+
+            migrationBuilder.DropTable(
+                name: "Positions");
 
             migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Subdivisions");
-
-            migrationBuilder.DropTable(
-                name: "ActiveStatuses");
-
-            migrationBuilder.DropTable(
-                name: "ProjectTypes");
         }
     }
 }

@@ -1,27 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace OutOfOfficeWebApp.Utils
 {
     public static class Extensions
     {
-        public static EntityEntry<T>? AddIfNotExists<T>(this DbSet<T> dbSet, T entity, Expression<Func<T, bool>> predicate = null!) where T : class
+        public static string GetRole(this ClaimsPrincipal principal)
         {
-            var exists = predicate != null ? dbSet.Any(predicate) : dbSet.Any();
-            return !exists ? dbSet.Add(entity) : null;
-        }
+            if (principal == null)
+            {
+                return "";
+            }
 
-        public static void SeedEnumValues<T, TEnum>(this DbSet<T> dbSet, Func<TEnum, T> converter) 
-            where T : EnumTable<TEnum>
-            where TEnum : Enum
-        { 
-            Enum.GetValues(typeof(TEnum))
-                .Cast<object>()
-                .Select(value => converter((TEnum)value))
-                .ToList()
-                .ForEach(instance => dbSet.AddIfNotExists(instance));
-        }
+            Claim? roleClaim = principal.Claims.SingleOrDefault(c => c.Type.EndsWith("role", true, null));
 
+            if (roleClaim == null)
+            {
+                return String.Empty;
+            }
+            return roleClaim.Value;
+        }        
     }
 }

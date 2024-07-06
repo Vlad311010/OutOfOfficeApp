@@ -1,9 +1,11 @@
 using app.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using OutOfOfficeWebApp;
 using OutOfOfficeWebApp.Models.Enums;
 using OutOfOfficeWebApp.Utils;
 using System;
+using System.Reflection.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,14 +32,7 @@ builder.Services.AddRazorPages()
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy =>
-        policy.RequireRole(new string[] { "Admin" })
-    );
-    options.AddPolicy("OwnerOrAdmin", policy =>
-    {
-        policy.RequireAuthenticatedUser();
-        // policy.Requirements.Add(new OwnerRequirement());
-    });
+    
 });
 
 
@@ -68,19 +63,5 @@ app.UseAuthorization();
 
 
 app.MapRazorPages();
-
-using (var scope = app.Services.CreateScope())
-{
-    var service = scope.ServiceProvider;
-    var dbContext = service.GetService<AppDbContext>();
-    dbContext?.AbsenceReasons.SeedEnumValues<AbsenceReason, AbsenceReasonEnum>(@enum => @enum);
-    dbContext?.ActiveStatuses.SeedEnumValues<ActiveStatus, ActiveStatusEnum>(@enum => @enum);
-    dbContext?.Positions.SeedEnumValues<Position, PositionEnum>(@enum => @enum);
-    dbContext?.ProjectTypes.SeedEnumValues<ProjectType, ProjectTypeEnum>(@enum => @enum);
-    dbContext?.RequestStatuses.SeedEnumValues<RequestStatus, RequestStatusEnum>(@enum => @enum);
-    dbContext?.Roles.SeedEnumValues<Role, RoleEnum>(@enum => @enum);
-    dbContext?.Subdivisions.SeedEnumValues<Subdivision, SubdivisionEnum>(@enum => @enum);
-    dbContext?.SaveChanges();
-}
 
 app.Run();

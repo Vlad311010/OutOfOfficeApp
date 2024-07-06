@@ -4,8 +4,8 @@ namespace OutOfOfficeWebApp.Models.Enums
 {
     public enum ProjectTypeEnum
     {
-        Inner = 0,
-        Commercial = 1
+        Inner = 1,
+        Commercial = 2
     }
 
     public class ProjectType : EnumTable<ProjectTypeEnum>

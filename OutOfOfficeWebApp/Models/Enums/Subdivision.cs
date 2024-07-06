@@ -4,9 +4,9 @@ namespace OutOfOfficeWebApp.Models.Enums
 {
     public enum SubdivisionEnum
     {
-        CustomerExperience = 0,
-        GlobalOperations = 1,
-        InnovativeSolutions = 2,
+        CustomerExperience = 1,
+        GlobalOperations = 2,
+        InnovativeSolutions = 3
     }
 
     public class Subdivision : EnumTable<SubdivisionEnum>

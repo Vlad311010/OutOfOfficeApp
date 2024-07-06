@@ -19,7 +19,7 @@ namespace OutOfOfficeWebApp.Models
 
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }
-        public RequestStatus Status { get; set; } = new RequestStatus(RequestStatusEnum.New);
+        public RequestStatus Status { get; set; } = default!;
 
         [MaxLength(1000), Column(TypeName = "varchar")]
         public string? Comment { get; set; }

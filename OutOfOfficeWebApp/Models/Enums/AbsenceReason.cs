@@ -4,12 +4,11 @@ namespace OutOfOfficeWebApp.Models.Enums
 {
     public enum AbsenceReasonEnum
     {
-        None,
-        SickLeave,
-        PersonalLeave,
-        Vacation,
-        UnpaidLeave,
-        WorkFromHome
+        SickLeave = 1,
+        PersonalLeave = 2,
+        Vacation = 3,
+        UnpaidLeave = 4,
+        WorkFromHome = 5
     }
 
     public class AbsenceReason : EnumTable<AbsenceReasonEnum>

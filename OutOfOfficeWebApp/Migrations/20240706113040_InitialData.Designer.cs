@@ -12,8 +12,8 @@ using app.Repositories;
 namespace OutOfOfficeWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240705095531_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240706113040_InitialData")]
+    partial class InitialData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,14 +48,12 @@ namespace OutOfOfficeWebApp.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("ApproverId")
-                        .IsUnique();
+                    b.HasIndex("ApproverId");
 
                     b.HasIndex("LeaveRequestId")
                         .IsUnique();
 
-                    b.HasIndex("StatusId")
-                        .IsUnique();
+                    b.HasIndex("StatusId");
 
                     b.ToTable("ApprovalRequests");
                 });
@@ -85,9 +83,6 @@ namespace OutOfOfficeWebApp.Migrations
                     b.Property<int>("PositionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProjcetId")
-                        .HasColumnType("int");
-
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
@@ -99,23 +94,15 @@ namespace OutOfOfficeWebApp.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PeoplePartnerId")
-                        .IsUnique();
+                    b.HasIndex("PeoplePartnerId");
 
-                    b.HasIndex("PositionId")
-                        .IsUnique();
+                    b.HasIndex("PositionId");
 
-                    b.HasIndex("ProjcetId")
-                        .IsUnique();
+                    b.HasIndex("RoleId");
 
-                    b.HasIndex("RoleId")
-                        .IsUnique();
+                    b.HasIndex("StatusId");
 
-                    b.HasIndex("StatusId")
-                        .IsUnique();
-
-                    b.HasIndex("SubdivisionId")
-                        .IsUnique();
+                    b.HasIndex("SubdivisionId");
 
                     b.ToTable("Employees");
                 });
@@ -254,14 +241,11 @@ namespace OutOfOfficeWebApp.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AbsenceReasonId")
-                        .IsUnique();
+                    b.HasIndex("AbsenceReasonId");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("StatusId")
-                        .IsUnique();
+                    b.HasIndex("StatusId");
 
                     b.ToTable("LeaveRequests");
                 });
@@ -294,14 +278,11 @@ namespace OutOfOfficeWebApp.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("ProjectManagerId")
-                        .IsUnique();
+                    b.HasIndex("ProjectManagerId");
 
-                    b.HasIndex("ProjectTypeId")
-                        .IsUnique();
+                    b.HasIndex("ProjectTypeId");
 
-                    b.HasIndex("StatusId")
-                        .IsUnique();
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Projects");
                 });
@@ -316,11 +297,9 @@ namespace OutOfOfficeWebApp.Migrations
 
                     b.HasKey("ProjectId", "EmployeeId");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("ProjectId")
-                        .IsUnique();
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectEmployees");
                 });
@@ -328,8 +307,8 @@ namespace OutOfOfficeWebApp.Migrations
             modelBuilder.Entity("OutOfOfficeWebApp.Models.ApprovalRequest", b =>
                 {
                     b.HasOne("OutOfOfficeWebApp.Models.Employee", "Approver")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.ApprovalRequest", "ApproverId")
+                        .WithMany()
+                        .HasForeignKey("ApproverId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -340,8 +319,8 @@ namespace OutOfOfficeWebApp.Migrations
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Enums.RequestStatus", "Status")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.ApprovalRequest", "StatusId")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -355,46 +334,38 @@ namespace OutOfOfficeWebApp.Migrations
             modelBuilder.Entity("OutOfOfficeWebApp.Models.Employee", b =>
                 {
                     b.HasOne("OutOfOfficeWebApp.Models.Employee", "PeoplePartner")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.Employee", "PeoplePartnerId")
+                        .WithMany()
+                        .HasForeignKey("PeoplePartnerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Enums.Position", "Position")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.Employee", "PositionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("OutOfOfficeWebApp.Models.Project", "Project")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.Employee", "ProjcetId")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Enums.Role", "Role")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.Employee", "RoleId")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Enums.ActiveStatus", "Status")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.Employee", "StatusId")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Enums.Subdivision", "Subdivision")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.Employee", "SubdivisionId")
+                        .WithMany()
+                        .HasForeignKey("SubdivisionId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("PeoplePartner");
 
                     b.Navigation("Position");
-
-                    b.Navigation("Project");
 
                     b.Navigation("Role");
 
@@ -406,20 +377,20 @@ namespace OutOfOfficeWebApp.Migrations
             modelBuilder.Entity("OutOfOfficeWebApp.Models.LeaveRequest", b =>
                 {
                     b.HasOne("OutOfOfficeWebApp.Models.Enums.AbsenceReason", "AbsenceReason")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.LeaveRequest", "AbsenceReasonId")
+                        .WithMany()
+                        .HasForeignKey("AbsenceReasonId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Employee", "Employee")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.LeaveRequest", "EmployeeId")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Enums.RequestStatus", "Status")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.LeaveRequest", "StatusId")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -433,20 +404,20 @@ namespace OutOfOfficeWebApp.Migrations
             modelBuilder.Entity("OutOfOfficeWebApp.Models.Project", b =>
                 {
                     b.HasOne("OutOfOfficeWebApp.Models.Employee", "ProjectManager")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.Project", "ProjectManagerId")
+                        .WithMany()
+                        .HasForeignKey("ProjectManagerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Enums.ProjectType", "ProjectType")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.Project", "ProjectTypeId")
+                        .WithMany()
+                        .HasForeignKey("ProjectTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Enums.ActiveStatus", "Status")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.Project", "StatusId")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -460,14 +431,14 @@ namespace OutOfOfficeWebApp.Migrations
             modelBuilder.Entity("OutOfOfficeWebApp.Models.ProjectEmployees", b =>
                 {
                     b.HasOne("OutOfOfficeWebApp.Models.Employee", "Employee")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.ProjectEmployees", "EmployeeId")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OutOfOfficeWebApp.Models.Project", "Project")
-                        .WithOne()
-                        .HasForeignKey("OutOfOfficeWebApp.Models.ProjectEmployees", "ProjectId")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

@@ -6,8 +6,8 @@ namespace OutOfOfficeWebApp.Models.Enums
 {
     public enum ActiveStatusEnum
     {
-        Incative = 0,
-        Active = 1
+        Incative = 1,
+        Active = 2
     }
 
     public class ActiveStatus : EnumTable<ActiveStatusEnum>
@@ -19,8 +19,6 @@ namespace OutOfOfficeWebApp.Models.Enums
 
         public ActiveStatus() { }
 
-        public static implicit operator ActiveStatus(ActiveStatusEnum @enum) => new ActiveStatus(@enum);
-
-        public static implicit operator ActiveStatusEnum(ActiveStatus type) => (ActiveStatusEnum)type.Id;
+        
     }
 }

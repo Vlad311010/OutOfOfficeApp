@@ -15,7 +15,7 @@ namespace OutOfOfficeWebApp.Models
 
         [Required, ForeignKey("AbsenceReason")]
         public int AbsenceReasonId { get; set; }
-        public AbsenceReason AbsenceReason { get; set; } = new AbsenceReason(AbsenceReasonEnum.None);
+        public AbsenceReason AbsenceReason { get; set; } = default!;
 
         [Required, Column(TypeName = "Date")]
         public DateTime StartDate { get; set; }
@@ -28,6 +28,6 @@ namespace OutOfOfficeWebApp.Models
 
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }
-        public RequestStatus Status { get; set; } = new RequestStatus(RequestStatusEnum.New);
+        public RequestStatus Status { get; set; } = default!;
     }
 }

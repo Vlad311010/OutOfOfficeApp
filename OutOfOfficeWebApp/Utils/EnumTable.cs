@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OutOfOfficeWebApp.Utils
 {
@@ -18,5 +19,22 @@ namespace OutOfOfficeWebApp.Utils
 
         [Required, MaxLength(50)]
         public string Name { get; set; }
+
+        public static void InsertEnumData(MigrationBuilder migrationBuilder, string tableName) 
+        {
+            foreach (T e in Enum.GetValues(typeof(T)).Cast<T>())
+            {
+                migrationBuilder.InsertData(
+                    table: tableName,
+                    columns: new[] { "Id", "Name" },
+                    values: new object[] { Convert.ToInt32(e), e.ToString() }
+                );
+            }
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
