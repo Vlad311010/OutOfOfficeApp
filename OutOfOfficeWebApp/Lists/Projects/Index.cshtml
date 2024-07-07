@@ -11,6 +11,15 @@
 }
 <h3>Projects Page</h3>
 
+<div class="input-group">
+    <form asp-page="/Projects/index" asp-page-handler="Find" method="get">
+        <div class="input-group">
+            <input type="hidden" name="handler" value="Find" />
+            <input type="search" class="form-control rounded" name="id" placeholder="Search by Id" aria-label="Search" aria-describedby="search-addon" />
+            <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+        </div>
+    </form>
+</div>
 @if (Model.Projects == null || Model.Projects.Count() == 0)
 {
     <h3>Nothing Here</h3>
@@ -21,7 +30,7 @@ else
         <table class="table table-bordered table-hover">
             <thead class="thead-dark">
                 <tr class="bg-black text-white">
-                    <th>ID</th>
+                    <th>ID ⇑</th>
                     <th>Type</th>
                     <th>Status</th>
                 </tr>

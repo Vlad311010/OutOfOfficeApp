@@ -20,6 +20,13 @@ namespace OutOfOfficeWebApp.Lists.Projects
         {
             Projects = await projectsRepo.All();
         }
-            
+
+        public async Task OnGetFindAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                Projects = await projectsRepo.All();
+            else 
+                Projects = await projectsRepo.Find(id);
+        }
     }
 }

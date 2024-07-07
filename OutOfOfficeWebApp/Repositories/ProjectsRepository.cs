@@ -22,6 +22,15 @@ namespace OutOfOfficeWebApp.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Project?>> Find(string id)
+        {
+            return await context.Projects.Where(p => p.ID.ToString().Contains(id))
+                .Include(p => p.ProjectType)
+                .Include(p => p.ProjectManager)
+                .Include(p => p.Status)
+                .ToListAsync();
+        }
+
         public async Task<Project?> GetById(int id)
         {
             return await context.Projects.Where(p => p.ID == id)
@@ -30,6 +39,8 @@ namespace OutOfOfficeWebApp.Repositories
                 .Include(p => p.Status)
                 .SingleAsync();
         }
+
+
 
         public void Add(ProjectViewModel project)
         {
