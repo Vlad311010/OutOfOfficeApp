@@ -16,13 +16,13 @@ else
     <div class="container mt-5 w-25">
         <div class="row justify-content-center">
             <div class="col form-container">
-                <modelinput field="@nameof(@Model.Project.ID)" value="@Model.Project.ID" editable="false"></modelinput>
-                <modelinput field="@nameof(@Model.Project.ProjectManager)" value="@Model.Project.ProjectManager.FullName" editable="false"></modelinput>
-                <modelinput field="@nameof(@Model.Project.ProjectType)" value="@Model.Project.ProjectType" editable="false"></modelinput>
-                <modelinput field="@nameof(@Model.Project.StartDate)" value="@Model.Project.StartDate.ToString("yyyy.MM.dd")" editable="false"></modelinput>
-                <modelinput field="@nameof(@Model.Project.EndDate)" value="@Model.Project.EndDate?.ToString("yyyy.MM.dd")" editable="false"></modelinput>
-                <modelinput field="@nameof(@Model.Project.Status)" value="@Model.Project.Status" editable="false"></modelinput>
-                <modelinput field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="false"></modelinput>
+                <modelinput model="Project" field="@nameof(@Model.Project.ID)" value="@Model.Project.ID" editable="false"></modelinput>
+                <modelinput model="Project" field="@nameof(@Model.Project.ProjectManager)" value="@Model.Project.ProjectManager.FullName" editable="false"></modelinput>
+                <modelinput model="Project" field="@nameof(@Model.Project.ProjectType)" value="@Model.Project.ProjectType" editable="false"></modelinput>
+                <modelinput model="Project" field="@nameof(@Model.Project.StartDate)" value="@Model.Project.StartDate.ToString("yyyy.MM.dd")" editable="false"></modelinput>
+                <modelinput model="Project" field="@nameof(@Model.Project.EndDate)" value="@Model.Project.EndDate?.ToString("yyyy.MM.dd")" editable="false"></modelinput>
+                <modelinput model="Project" field="@nameof(@Model.Project.Status)" value="@Model.Project.Status" editable="false"></modelinput>
+                <modelinput model="Project" field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="false"></modelinput>
             </div>
             
             <div class="form-group py-3">

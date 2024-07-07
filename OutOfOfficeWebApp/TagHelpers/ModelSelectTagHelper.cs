@@ -23,6 +23,7 @@ namespace OutOfOfficeWebApp.TagHelpers
             output.TagName = @"div class=""form-group""";
 
             string forValue = ModelName + "_" + FieldName;
+
             output.Content.AppendFormat(@"<label class=""control-label"" for=""{0}"">{1}</label>", forValue, FieldName.SplitCamelCase().Replace("Id", ""));
             TagHelperContent select = output.Content.AppendFormat(@"<select data-val=""true"" data-val-required=""The {0} field is required."" id=""{1}"" name=""{2}"" class=""form-control"">", 
                 FieldName.SplitCamelCase(),
@@ -31,10 +32,10 @@ namespace OutOfOfficeWebApp.TagHelpers
             );
             foreach (SelectListItem item in FieldValue)
             {
-                select.AppendFormat(@"<option selected=""{0}"" value=""{1}"">{2}</option>", item.Selected ? "selected" : "", item.Value, item.Text);
+                select.AppendFormat(@"<option {0} value=""{1}"">{2}</option>", item.Selected ? @"selected=""selected""" : "", item.Value, item.Text);
             }
             output.Content.AppendHtml("</select>");
-            output.Content.AppendFormat(@"<span asp-validation-for=""{0}"" class=""text-danger""></span>", ModelName + "." + FieldName);
+            output.Content.AppendFormat(@"<span class=""text-danger field-validation-valid"" data-valmsg-for=""{0}"" data-valmsg-replace=""true""></span>", ModelName + "." + FieldName);
             
             output.Attributes.Clear();
         }
