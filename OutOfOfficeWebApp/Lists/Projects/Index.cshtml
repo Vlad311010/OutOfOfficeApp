@@ -11,15 +11,23 @@
 }
 <h3>Projects Page</h3>
 
-<div class="input-group">
-    <form asp-page="/Projects/index" asp-page-handler="Find" method="get">
-        <div class="input-group">
+<form asp-page="/Projects/index" asp-page-handler="Find" method="get">
+    <div class="input-group w-25">
+        <input type="hidden" name="handler" value="Find" />
+        <input type="search" class="form-control rounded" name="id" placeholder="Search by Id" aria-label="Search" aria-describedby="search-addon" />
+        <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+    </div>
+    <div class="input-group py-3">
+        <div class="d-flex justify-content-between gap-3">
             <input type="hidden" name="handler" value="Find" />
-            <input type="search" class="form-control rounded" name="id" placeholder="Search by Id" aria-label="Search" aria-describedby="search-addon" />
-            <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+            <modelselect model="" field="StatusFilter" values="Model.StatusSelectors"></modelselect>
+            <modelselect model="" field="TypeFilter" values="Model.ProjectTypeSelectors"></modelselect>
+            <div class="py-4">
+                <button type="submit" id="FilterBtn" name="FilterBtn" class="btn btn-outline-primary" data-mdb-ripple-init>Filter</button>
+            </div>
         </div>
-    </form>
-</div>
+    </div>
+</form>
 @if (Model.Projects == null || Model.Projects.Count() == 0)
 {
     <h3>Nothing Here</h3>

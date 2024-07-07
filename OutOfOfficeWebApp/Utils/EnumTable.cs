@@ -33,12 +33,13 @@ namespace OutOfOfficeWebApp.Utils
             }
         }
 
-        public static List<SelectListItem> GetSelectList(int selectedId)
+        public static List<SelectListItem> GetSelectList(int selectedId, bool noneOption = false)
         {
             List<SelectListItem> selectListItems = new List<SelectListItem>();
+            selectListItems.Add(new SelectListItem("---", string.Empty, true));
             foreach (T e in Enum.GetValues(typeof(T)).Cast<T>())
             {
-                selectListItems.Add(new SelectListItem(e.ToString(), Convert.ToInt32(e).ToString(), selectedId == Convert.ToInt32(e)));
+                selectListItems.Add(new SelectListItem(e.ToString(), Convert.ToInt32(e).ToString(), !noneOption && selectedId == Convert.ToInt32(e)));
             }
             return selectListItems;
         }
