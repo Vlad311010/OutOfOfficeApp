@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Migrations;
-using System.Linq.Expressions;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace OutOfOfficeWebApp.Utils
 {
@@ -23,5 +20,10 @@ namespace OutOfOfficeWebApp.Utils
             }
             return roleClaim.Value;
         }        
+
+        public static string SplitCamelCase(this string str)
+        {
+            return Regex.Replace(str, "(\\B[A-Z]+?(?=[A-Z][^A-Z])|\\B[A-Z]+?(?=[^A-Z]))", " $1");
+        }
     }
 }

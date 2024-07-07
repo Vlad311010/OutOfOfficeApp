@@ -1,0 +1,39 @@
+﻿@page "/Projects/Add/"
+@using OutOfOfficeWebApp.Models
+@model OutOfOfficeWebApp.Lists.Projects.AddModel
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<h3>Projects Page</h3>
+
+@if (Model.Project == null)
+{
+    <h3>Nothing Here</h3>
+}
+else 
+{
+    <div class="container mt-5 w-25">
+        <div class="row justify-content-center">
+            <div class="col form-container">
+                <form asp-page="/Projects/Add" method="post">
+                    
+                    <modelselect model="Project" field="@nameof(@Model.Project.ProjectManagerId)" values="Model.PMSelectors"></modelselect>
+                    <modelselect model="Project" field="@nameof(@Model.Project.ProjectTypeId)" values="Model.ProjectTypeSelectors"></modelselect>
+                    <modelinput model="Project" field="@nameof(@Model.Project.StartDate)" value="@Model.Project.StartDate.ToString("yyyy.MM.dd")" editable="true"></modelinput>
+                    <modelinput model="Project" field="@nameof(@Model.Project.EndDate)" value="@Model.Project.EndDate?.ToString("yyyy.MM.dd")" editable="true"></modelinput>
+                    <modelselect model="Project" field="@nameof(@Model.Project.StatusId)" values="Model.StatusSelectors"></modelselect>
+                    <modelinput model="Project" field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="true"></modelinput>
+
+                    <div class="form-group py-3">
+                        <button type="submit" class="btn btn-primary w-100">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

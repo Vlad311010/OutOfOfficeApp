@@ -10,34 +10,13 @@
         <div class="row justify-content-center">
             <div class="col form-container">
                 <h2 class="mb-4 text-center">Welcome</h2>
-                <div class="mb-3">
-                    <label for="fullName" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="fullName" value="@Model.Employee.FullName" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="id" class="form-label">ID</label>
-                    <input type="text" class="form-control" id="id" value="@Model.Employee.ID" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="id" class="form-label">Position</label>
-                    <input type="text" class="form-control" id="id" value="@Model.Employee.Position" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="id" class="form-label">People Partner</label>
-                    <input type="text" class="form-control" id="id" value="@Model.Employee.PeoplePartner.FullName" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="id" class="form-label">Subdivision</label>
-                    <input type="text" class="form-control" id="id" value="@Model.Employee.Subdivision" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="id" class="form-label">Out Of Office Balance</label>
-                    <input type="text" class="form-control" id="id" value="@Model.Employee.OutOfOfficeBalance" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="id" class="form-label">Status</label>
-                    <input type="text" class="form-control" id="id" value="@Model.Employee.Status" readonly>
-                </div>
+                <modelfield field="@nameof(@Model.Employee.FullName)" value="@Model.Employee.FullName" editable="false"></modelfield>
+                <modelfield field="@nameof(@Model.Employee.ID)" value="@Model.Employee.ID" editable="false"></modelfield>
+                <modelfield field="@nameof(@Model.Employee.Position)" value="@Model.Employee.Position" editable="false"></modelfield>
+                <modelfield field="@nameof(@Model.Employee.PeoplePartner)" value="@Model.Employee.PeoplePartner.FullName" editable="false"></modelfield>
+                <modelfield field="@nameof(@Model.Employee.Subdivision)" value="@Model.Employee.Subdivision" editable="false"></modelfield>
+                <modelfield field="@nameof(@Model.Employee.OutOfOfficeBalance)" value="@Model.Employee.OutOfOfficeBalance" editable="false"></modelfield>
+                <modelfield field="@nameof(Model.Employee.Status)" value="@Model.Employee.Status" editable="false"></modelfield>
             </div>
         </div>
     </div>

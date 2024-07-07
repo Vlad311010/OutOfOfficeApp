@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace OutOfOfficeWebApp.Utils
 {
@@ -30,6 +31,16 @@ namespace OutOfOfficeWebApp.Utils
                     values: new object[] { Convert.ToInt32(e), e.ToString() }
                 );
             }
+        }
+
+        public static List<SelectListItem> GetSelectList(int selectedId)
+        {
+            List<SelectListItem> selectListItems = new List<SelectListItem>();
+            foreach (T e in Enum.GetValues(typeof(T)).Cast<T>())
+            {
+                selectListItems.Add(new SelectListItem(e.ToString(), Convert.ToInt32(e).ToString(), selectedId == Convert.ToInt32(e)));
+            }
+            return selectListItems;
         }
 
         public override string ToString()

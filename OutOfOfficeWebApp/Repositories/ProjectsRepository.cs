@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OutOfOfficeWebApp.Interfaces;
 using OutOfOfficeWebApp.Models;
+using OutOfOfficeWebApp.ViewModels;
 
 namespace OutOfOfficeWebApp.Repositories
 {
@@ -28,6 +29,17 @@ namespace OutOfOfficeWebApp.Repositories
                 .Include(p => p.ProjectManager)
                 .Include(p => p.Status)
                 .SingleAsync();
+        }
+
+        public void Add(ProjectViewModel project)
+        {
+            Project projectModel = new Project(project);
+            context.Add(projectModel);
+        }
+
+        public async Task Save()
+        {
+            await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Project?>> EmployeeRelated(Employee employee)

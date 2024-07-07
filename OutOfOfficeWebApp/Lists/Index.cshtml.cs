@@ -32,7 +32,7 @@ namespace OutOfOfficeWebApp.Lists
             }
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (EmployeeId == null)
                 ModelState.AddModelError(nameof(EmployeeId), "ID Field is required");

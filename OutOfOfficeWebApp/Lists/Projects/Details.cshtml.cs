@@ -5,20 +5,20 @@ using OutOfOfficeWebApp.Models;
 
 namespace OutOfOfficeWebApp.Lists.Projects
 {
-    public class IndexModel : PageModel
+    public class DetailsModel : PageModel
     {
         private readonly IProjectsRepository projectsRepo;
         
-        public IEnumerable<Project> Projects { get; private set; }
+        public Project? Project { get; private set; }
 
-        public IndexModel(IProjectsRepository projectsRepo)
+        public DetailsModel(IProjectsRepository projectsRepo)
         {
             this.projectsRepo = projectsRepo;
         }
         
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int id)
         {
-            Projects = await projectsRepo.All();
+            Project = await projectsRepo.GetById(id);
         }
             
     }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OutOfOfficeWebApp.Interfaces;
 using OutOfOfficeWebApp.Models;
+using System.Linq.Expressions;
 
 namespace OutOfOfficeWebApp.Repositories
 {
@@ -30,6 +31,17 @@ namespace OutOfOfficeWebApp.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<Employee>> Where(Expression<Func<Employee, bool>> predicate)
+        {
+            return await context.Employees.Where(predicate)
+                .Include(e => e.PeoplePartner)
+                .Include(e => e.Status)
+                .Include(e => e.Role)
+                .Include(e => e.Position)
+                .Include(e => e.Subdivision)
+                .ToListAsync();
+        }
+
         public Task<Employee?> Add(Employee user)
         {
             throw new NotImplementedException();
@@ -43,6 +55,11 @@ namespace OutOfOfficeWebApp.Repositories
         public Task<Employee?> Update(Employee user)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task Save()
+        {
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using OutOfOfficeWebApp.Models.Enums;
+using OutOfOfficeWebApp.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -28,5 +29,17 @@ namespace OutOfOfficeWebApp.Models
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }
         public ActiveStatus Status { get; set; } = default!;
+
+        public Project() { }
+        public Project(ProjectViewModel viewModel)
+        {
+            ID = viewModel.ID;
+            ProjectTypeId = viewModel.ProjectTypeId;
+            StartDate = viewModel.StartDate;
+            EndDate = viewModel.EndDate;
+            ProjectManagerId = viewModel.ProjectManagerId;
+            Comment = viewModel.Comment;
+            StatusId = viewModel.StatusId;
+        }
     }
 }
