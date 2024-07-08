@@ -39,6 +39,7 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<IEmployeesRepository, EmployeesRepository>();
 builder.Services.AddScoped<IProjectsRepository, ProjectsRepository>();
+builder.Services.AddScoped<IProjectEmployeesRepository, ProjectEmployeesRepository>();
 
 
 

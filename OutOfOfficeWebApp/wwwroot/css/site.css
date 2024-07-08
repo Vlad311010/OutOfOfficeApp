@@ -50,3 +50,13 @@ td a:hover {
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }
+
+
+option:checked {
+    color:white;
+    background-color: forestgreen;
+}
+
+option:not(:checked) {
+    color: gray;
+}
