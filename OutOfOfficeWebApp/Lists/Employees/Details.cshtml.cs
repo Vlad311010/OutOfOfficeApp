@@ -3,23 +3,23 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using OutOfOfficeWebApp.Interfaces;
 using OutOfOfficeWebApp.Models;
 
-namespace OutOfOfficeWebApp.Lists.Projects
+namespace OutOfOfficeWebApp.Lists.Employees
 {
     public class DetailsModel : PageModel
     {
-        private readonly IProjectsRepository projectsRepo;
+        private readonly IEmployeesRepository employeeRepo;
         
-        public Project? Project { get; private set; }
+        public Employee? Employee { get; private set; }
 
-        public DetailsModel(IProjectsRepository projectsRepo)
+        public DetailsModel(IEmployeesRepository employeeRepo)
         {
-            this.projectsRepo = projectsRepo;
+            this.employeeRepo = employeeRepo;
         }
         
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Project = await projectsRepo.GetById(id);
-            if (Project == null)
+            Employee = await employeeRepo.GetById(id);
+            if (Employee == null)
                 return NotFound();
 
             return Page();

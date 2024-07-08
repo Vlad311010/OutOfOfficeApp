@@ -26,14 +26,19 @@ namespace OutOfOfficeWebApp.Lists.Projects
             this.employeesRepo = employeesRepo;
         }
         
-        public async Task OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             Project = await projectsRepo.GetById(id);
-            IEnumerable<Employee> ProjectManagers = await employeesRepo.Where(e => e.Position == new Models.Enums.Position(Models.Enums.PositionEnum.ProjectManager));
+            if (Project == null)
+                return NotFound();
+
+            IEnumerable<Employee> ProjectManagers = await employeesRepo.Where(e => e.Position == new Position(PositionEnum.ProjectManager));
             
             PMSelectors = ProjectManagers.Select(pm => new SelectListItem(pm.FullName, pm.ID.ToString(), pm.ID == Project.ProjectManagerId));
             StatusSelectors = ActiveStatus.GetSelectList(Project.StatusId);
             ProjectTypeSelectors = ProjectType.GetSelectList(Project.ProjectTypeId);
+
+            return Page();
         }
 
         public async Task<ActionResult> OnPostSaveAsync(ProjectViewModel Project)

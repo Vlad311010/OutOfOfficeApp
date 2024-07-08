@@ -1,9 +1,4 @@
-﻿using OutOfOfficeWebApp.Models.Enums;
-using OutOfOfficeWebApp.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace OutOfOfficeWebApp.ViewModels
+﻿namespace OutOfOfficeWebApp.ViewModels
 {
     public class ProjectViewModel
     {

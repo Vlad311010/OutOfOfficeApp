@@ -17,7 +17,11 @@ namespace OutOfOfficeWebApp.Repositories
 
         public async Task<IEnumerable<Employee>> All()
         {
-            return await context.Employees.ToListAsync();
+            return await context.Employees
+                .Include(e => e.Status)
+                .Include(e => e.Position)
+                .Include(e => e.Subdivision)
+                .ToListAsync();
         }
 
         public async Task<Employee?> GetById(int id)
@@ -29,6 +33,17 @@ namespace OutOfOfficeWebApp.Repositories
                 .Include(e => e.Position)
                 .Include(e => e.Subdivision)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Employee>> FindByName(string name)
+        {
+            return await context.Employees.Where(p => p.FullName.ToString().Contains(name))
+                .Include(e => e.PeoplePartner)
+                .Include(e => e.Status)
+                .Include(e => e.Role)
+                .Include(e => e.Position)
+                .Include(e => e.Subdivision)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Employee>> Where(Expression<Func<Employee, bool>> predicate)

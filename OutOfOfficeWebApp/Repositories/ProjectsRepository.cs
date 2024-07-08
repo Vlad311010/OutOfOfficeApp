@@ -22,7 +22,7 @@ namespace OutOfOfficeWebApp.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Project?>> Find(string id)
+        public async Task<IEnumerable<Project>> FindById(string id)
         {
             return await context.Projects.Where(p => p.ID.ToString().Contains(id))
                 .Include(p => p.ProjectType)

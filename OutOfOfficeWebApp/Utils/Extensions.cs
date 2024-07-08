@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 
 namespace OutOfOfficeWebApp.Utils
@@ -23,7 +24,17 @@ namespace OutOfOfficeWebApp.Utils
 
         public static string SplitCamelCase(this string str)
         {
-            return Regex.Replace(str, "(\\B[A-Z]+?(?=[A-Z][^A-Z])|\\B[A-Z]+?(?=[^A-Z]))", " $1");
+            return Regex.Replace(str, @"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", " ");
+        }
+
+        public static IEnumerable<SelectListItem>SetSelectedOption(this IEnumerable<SelectListItem> selectLists, string? value) 
+        {
+            value ??= string.Empty;
+            foreach (SelectListItem listItem in selectLists)
+            {
+                listItem.Selected = listItem.Value == value;
+            }
+            return selectLists;
         }
     }
 }

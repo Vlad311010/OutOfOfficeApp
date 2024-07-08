@@ -7,6 +7,7 @@ namespace OutOfOfficeWebApp.Interfaces
     {
         Task<IEnumerable<Employee>> All();
         Task<Employee?> GetById(int id);
+        Task<IEnumerable<Employee>> FindByName(string name);
         Task<IEnumerable<Employee>> Where(Expression<Func<Employee, bool>> predicate);
         Task<Employee?> Add(Employee user);
         Task<Employee?> Update(Employee user);

@@ -1,7 +1,67 @@
 ﻿@page "/Employees"
+@using OutOfOfficeWebApp.Models
 @model OutOfOfficeWebApp.Lists.Employees.IndexModel
 @{
     ViewData["Title"] = "Employees";
 }
 
 <h3>Employees Page</h3>
+
+@section scripts {
+    <script src="~/js/sort.js"></script>
+}
+
+<form asp-page="/Employees/index" asp-page-handler="Filter" method="get">
+    <div class="input-group w-25">
+        <input type="hidden" name="handler" value="Filter" />
+        <input type="search" class="form-control rounded" name="name" value="@Model.SearchValue" placeholder="Search by Full Name" aria-label="Search" aria-describedby="search-addon" />
+        <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+    </div>
+    <div class="input-group py-3">
+        <div class="d-flex justify-content-between gap-3">
+            <modelselect model="" field="PositionFilter" values="Model.PositionSelectors"></modelselect>
+            <modelselect model="" field="SubdivisionFilter" values="Model.SubdivisionSelectors"></modelselect>
+            <modelselect model="" field="StatusFilter" values="Model.StatusSelectors"></modelselect>
+            <div class="py-4">
+                <button type="submit" id="FilterBtn" name="FilterBtn" class="btn btn-outline-primary" data-mdb-ripple-init>Filter</button>
+            </div>
+        </div>
+    </div>
+</form>
+@if (Model.Employees == null || Model.Employees.Count() == 0)
+{
+    <h3>Nothing Here</h3>
+}
+else
+{
+    <div class="container mt-5">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr class="bg-black text-white">
+                    <th>ID ⇑</th>
+                    <th>FullName</th>
+                    <th>Position</th>
+                    <th>Subdivision</th>
+                    <th>PeoplePartner</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Employee e in Model.Employees)
+                {
+                    <tr>
+                        <td><a asp-page="/Employees/Details" asp-route-id="@e.ID">@e.ID</a></td>
+                        <td><a asp-page="/Employees/Details" asp-route-id="@e.ID">@e.FullName</a></td>
+                        <td><a asp-page="/Employees/Details" asp-route-id="@e.ID">@e.Position</a></td>
+                        <td><a asp-page="/Employees/Details" asp-route-id="@e.ID">@e.Subdivision</a></td>
+                        <td><a asp-page="/Employees/Details" asp-route-id="@e.ID">@e.PeoplePartner.FullName</a></td>
+                        <td><a asp-page="/Employees/Details" asp-route-id="@e.ID">@e.Status</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<div class="form-group py-3">
+    <a asp-page="/Employees/Add" class="btn btn-primary w-100">Add Employee</a>
+</div>

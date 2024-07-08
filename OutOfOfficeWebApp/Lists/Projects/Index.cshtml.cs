@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using OutOfOfficeWebApp.Interfaces;
 using OutOfOfficeWebApp.Models;
 using OutOfOfficeWebApp.Models.Enums;
+using OutOfOfficeWebApp.Utils;
 using System.Reflection;
 
 namespace OutOfOfficeWebApp.Lists.Projects
@@ -17,6 +18,8 @@ namespace OutOfOfficeWebApp.Lists.Projects
         public IEnumerable<SelectListItem> StatusSelectors { get; private set; }
         public IEnumerable<SelectListItem> ProjectTypeSelectors { get; private set; }
 
+        public string SearchValue { get; private set; }
+
         public IndexModel(IProjectsRepository projectsRepo)
         {
             this.projectsRepo = projectsRepo;
@@ -29,12 +32,16 @@ namespace OutOfOfficeWebApp.Lists.Projects
             Projects = await projectsRepo.All();
         }
 
-        public async Task OnGetFindAsync(string id, int? TypeFilter, int? StatusFilter)
+        public async Task OnGetFilterAsync(string id, int? TypeFilter, int? StatusFilter)
         {
+            SearchValue = id;
+            ProjectTypeSelectors.SetSelectedOption(TypeFilter?.ToString());
+            StatusSelectors.SetSelectedOption(StatusFilter?.ToString());
+
             if (string.IsNullOrWhiteSpace(id))
                 Projects = await projectsRepo.All();
             else 
-                Projects = await projectsRepo.Find(id);
+                Projects = await projectsRepo.FindById(id);
 
             Projects = Projects.Where(p => 
                 (TypeFilter == null || p.ProjectTypeId == TypeFilter)

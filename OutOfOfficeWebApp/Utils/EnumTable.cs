@@ -39,7 +39,7 @@ namespace OutOfOfficeWebApp.Utils
             selectListItems.Add(new SelectListItem("---", string.Empty, true));
             foreach (T e in Enum.GetValues(typeof(T)).Cast<T>())
             {
-                selectListItems.Add(new SelectListItem(e.ToString(), Convert.ToInt32(e).ToString(), !noneOption && selectedId == Convert.ToInt32(e)));
+                selectListItems.Add(new SelectListItem(e.ToString().SplitCamelCase(), Convert.ToInt32(e).ToString(), !noneOption && selectedId == Convert.ToInt32(e)));
             }
             return selectListItems;
         }

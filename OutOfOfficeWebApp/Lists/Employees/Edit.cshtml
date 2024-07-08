@@ -1,0 +1,41 @@
+﻿@page "/Employees/Edit/{id}"
+@using OutOfOfficeWebApp.Models
+@model OutOfOfficeWebApp.Lists.Employees.EditModel
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<h3>Employee Edit</h3>
+
+@if (Model.Employee == null)
+{
+    <h3>Nothing Here</h3>
+}
+else 
+{
+    <div class="container mt-5 w-25">
+        <div class="row justify-content-center">
+            <div class="col form-container">
+                <form asp-page="/Employees/Edit" asp-page-handler="Save" method="post">
+                    <modelinput model="Employee" field="@nameof(@Model.Employee.ID)" value="@Model.Employee.ID" editable="true"></modelinput>
+                    <modelinput model="Employee" field="@nameof(@Model.Employee.FullName)" value="@Model.Employee.FullName" editable="true"></modelinput>
+                    <modelselect model="Employee" field="@nameof(@Model.Employee.SubdivisionId)" values="Model.SubdivisionSelectors"></modelselect>
+                    <modelselect model="Employee" field="@nameof(@Model.Employee.PositionId)" values="Model.PositionSelectors"></modelselect>
+                    <modelselect model="Employee" field="@nameof(@Model.Employee.StatusId)" values="Model.StatusSelectors"></modelselect>
+                    <modelselect model="Employee" field="@nameof(@Model.Employee.PeoplePartnerId)" values="Model.HRSelectors"></modelselect>
+                    <modelinput model="Employee" field="@nameof(@Model.Employee.OutOfOfficeBalance)" value="@Model.Employee.OutOfOfficeBalance" editable="true"></modelinput>
+                    <!--Admin only-->
+                    <modelselect model="Employee" field="@nameof(@Model.Employee.RoleId)" values="Model.RoleSelectors"></modelselect>
+
+                    <div class="form-group py-3">
+                        <button type="submit" class="btn btn-primary w-100">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
