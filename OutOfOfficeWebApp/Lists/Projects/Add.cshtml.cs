@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,9 @@ namespace OutOfOfficeWebApp.Lists.Projects
         private readonly IProjectsRepository projectsRepo;
         private readonly IEmployeesRepository employeesRepo;
 
-        public Project Project { get; private set; }
+        [BindProperty]
+        public ProjectViewModel Project { get; set; }
+
         public IEnumerable<SelectListItem> PMSelectors { get; private set; }
         public IEnumerable<SelectListItem> StatusSelectors { get; private set; }
         public IEnumerable<SelectListItem> ProjectTypeSelectors { get; private set; }
@@ -25,28 +28,31 @@ namespace OutOfOfficeWebApp.Lists.Projects
             this.employeesRepo = employeesRepo;
         }
 
-        public async Task OnGetAsync()
+        private async Task InitForm()
         {
-            Project = new Project();
+            Project = new ProjectViewModel();
             Project.StartDate = DateTime.Now;
-
-
             IEnumerable<Employee> ProjectManagers = await employeesRepo.Where(e => e.Position == new Position(PositionEnum.ProjectManager));
             PMSelectors = ProjectManagers.Select(pm => new SelectListItem(pm.FullName, pm.ID.ToString(), false));
             StatusSelectors = ActiveStatus.GetSelectList(1);
             ProjectTypeSelectors = ProjectType.GetSelectList(1);
         }
 
-        public async Task<ActionResult> OnPostAsync(ProjectViewModel project)
+        public async Task OnGetAsync()
+        {
+            await InitForm();
+        }
+
+        public async Task<ActionResult> OnPostAsync()
         {
             
-            if (!TryValidateModel(project) || project == null)
+            if (!TryValidateModel(Project) || Project == null)
             {
-                Console.WriteLine(ModelState.IsValid);
+                await InitForm();
                 return Page();
             }
 
-            projectsRepo.Add(project);
+            projectsRepo.Add(Project);
             await projectsRepo.Save();
 
             return RedirectToPage("/Projects/Index");

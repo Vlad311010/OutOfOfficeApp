@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OutOfOfficeWebApp.Interfaces;
 using OutOfOfficeWebApp.Models;
+using OutOfOfficeWebApp.ViewModels;
 using System.Linq.Expressions;
 
 namespace OutOfOfficeWebApp.Repositories
@@ -14,15 +15,14 @@ namespace OutOfOfficeWebApp.Repositories
             this.context = context;
         }
 
-
-        public async Task<IEnumerable<Employee>> All()
-        {
-            return await context.Employees
-                .Include(e => e.Status)
-                .Include(e => e.Position)
-                .Include(e => e.Subdivision)
-                .ToListAsync();
-        }
+            public async Task<IEnumerable<Employee>> All()
+            {
+                return await context.Employees
+                    .Include(e => e.Status)
+                    .Include(e => e.Position)
+                    .Include(e => e.Subdivision)
+                    .ToListAsync();
+            }
 
         public async Task<Employee?> GetById(int id)
         {
@@ -57,19 +57,10 @@ namespace OutOfOfficeWebApp.Repositories
                 .ToListAsync();
         }
 
-        public Task<Employee?> Add(Employee user)
+        public void Add(EmployeeViewModel employee)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Employee?> Remove(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Employee?> Update(Employee user)
-        {
-            throw new NotImplementedException();
+            Employee employeeModel = new Employee(employee);
+            context.Add(employeeModel);
         }
 
         public async Task Save()

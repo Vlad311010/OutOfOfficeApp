@@ -1,7 +1,46 @@
 ﻿@page "/LeaveRequests"
+@using OutOfOfficeWebApp.Models
 @model OutOfOfficeWebApp.Lists.LeaveRequests.IndexModel
 @{
     ViewData["Title"] = "LeaveRequests";
 }
 
 <h3>Leave Requests Page</h3>
+
+@if (Model.LeaveRequests == null || Model.LeaveRequests.Count() == 0)
+{
+    <h3>Nothing Here</h3>
+}
+else
+{
+    <div class="container mt-5">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr class="bg-black text-white">
+                    <th>ID ⇑</th>
+                    <th>Employee</th>
+                    <th>Reason</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (LeaveRequest e in Model.LeaveRequests)
+                {
+                    <tr>
+                        <td><a asp-page="/LeaveRequests/Details" asp-route-id="@e.ID">@e.ID</a></td>
+                        <td><a asp-page="/LeaveRequests/Details" asp-route-id="@e.ID">@e.Employee.FullName</a></td>
+                        <td><a asp-page="/LeaveRequests/Details" asp-route-id="@e.ID">@e.AbsenceReason</a></td>
+                        <td><a asp-page="/LeaveRequests/Details" asp-route-id="@e.ID">@e.StartDate</a></td>
+                        <td><a asp-page="/LeaveRequests/Details" asp-route-id="@e.ID">@e.EndDate</a></td>
+                        <td><a asp-page="/LeaveRequests/Details" asp-route-id="@e.ID">@e.Status</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<div class="form-group py-3">
+    <a asp-page="/LeaveRequests/Add" class="btn btn-primary w-100">New Leave Request</a>
+</div>

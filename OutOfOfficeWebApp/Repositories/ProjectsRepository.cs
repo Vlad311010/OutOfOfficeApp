@@ -40,8 +40,6 @@ namespace OutOfOfficeWebApp.Repositories
                 .SingleAsync();
         }
 
-
-
         public void Add(ProjectViewModel project)
         {
             Project projectModel = new Project(project);
@@ -52,10 +50,5 @@ namespace OutOfOfficeWebApp.Repositories
         {
             await context.SaveChangesAsync();
         }
-
-        /*public async Task<IEnumerable<Project?>> EmployeeRelated(Employee employee)
-        {
-            return await context.Projects.Where(p => context.ProjectEmployees.Where(record => record.EmployeeId == employee.ID).Select(p => p.ProjectId).Contains(p.ID)).ToListAsync();
-        }*/
     }
 }

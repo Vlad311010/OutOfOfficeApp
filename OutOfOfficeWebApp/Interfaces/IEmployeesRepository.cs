@@ -1,4 +1,5 @@
 ﻿using OutOfOfficeWebApp.Models;
+using OutOfOfficeWebApp.ViewModels;
 using System.Linq.Expressions;
 
 namespace OutOfOfficeWebApp.Interfaces
@@ -9,9 +10,7 @@ namespace OutOfOfficeWebApp.Interfaces
         Task<Employee?> GetById(int id);
         Task<IEnumerable<Employee>> FindByName(string name);
         Task<IEnumerable<Employee>> Where(Expression<Func<Employee, bool>> predicate);
-        Task<Employee?> Add(Employee user);
-        Task<Employee?> Update(Employee user);
-        Task<Employee?> Remove(int id);
+        void Add(EmployeeViewModel user);
         public Task Save();
     }
 }

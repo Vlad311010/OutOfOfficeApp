@@ -21,5 +21,20 @@ namespace OutOfOfficeWebApp.Models.Enums
         public static implicit operator Position(PositionEnum @enum) => new Position(@enum);
 
         public static implicit operator PositionEnum(Position faculty) => (PositionEnum)faculty.Id;
+
+        public static Role AppropriateRole(int positionId)
+        {
+            switch ((PositionEnum)positionId)
+            { 
+                case PositionEnum.Employee:
+                    return new Role(RoleEnum.Employee);
+                case PositionEnum.ProjectManager: 
+                    return new Role(RoleEnum.ProjectManager);
+                case PositionEnum.HRManager:
+                    return new Role(RoleEnum.HRManager);
+                default:
+                    return new Role(RoleEnum.Employee);
+            }
+        }
     }
 }

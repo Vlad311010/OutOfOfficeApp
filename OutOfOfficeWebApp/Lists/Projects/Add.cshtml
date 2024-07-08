@@ -17,13 +17,16 @@ else
         <div class="row justify-content-center">
             <div class="col form-container">
                 <form asp-page="/Projects/Add" method="post">
-                    
                     <modelselect model="Project" field="@nameof(@Model.Project.ProjectManagerId)" values="Model.PMSelectors"></modelselect>
                     <modelselect model="Project" field="@nameof(@Model.Project.ProjectTypeId)" values="Model.ProjectTypeSelectors"></modelselect>
+                    <span asp-validation-for="@Model.Project.ProjectTypeId" class="text-danger"></span>
                     <modelinput model="Project" field="@nameof(@Model.Project.StartDate)" value="@Model.Project.StartDate.ToString("yyyy.MM.dd")" editable="true"></modelinput>
+                    <span asp-validation-for="@Model.Project.StartDate" class="text-danger"></span>
                     <modelinput model="Project" field="@nameof(@Model.Project.EndDate)" value="@Model.Project.EndDate?.ToString("yyyy.MM.dd")" editable="true"></modelinput>
                     <modelselect model="Project" field="@nameof(@Model.Project.StatusId)" values="Model.StatusSelectors"></modelselect>
+                    <span asp-validation-for="@Model.Project.StatusId" class="text-danger"></span>
                     <modelinput model="Project" field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="true"></modelinput>
+                    <span asp-validation-for="@Model.Project.Comment" class="text-danger"></span>
 
                     <div class="form-group py-3">
                         <button type="submit" class="btn btn-primary w-100">Create</button>

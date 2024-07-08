@@ -27,19 +27,17 @@ namespace OutOfOfficeWebApp.TagHelpers
             output.TagName = @"div class=""mb-3""";
 
             string forValue = ModelName + "_" + FieldName;
+            string nameValue = ModelName + "." + FieldName;
             output.Content.AppendHtml(
                     string.Format(@"<label for=""{0}"" class=""form-label"">{1}</label>", forValue, FieldName.SplitCamelCase())
                 );
             output.Content.AppendHtml(
                 string.Format(@"<input id=""{0}"" name=""{1}"" type=""text"" class=""form-control"" value=""{2}"" {3}>",
                     forValue,
-                    ModelName + "." + FieldName,
+                    nameValue,
                     FieldValue,
                     Editable ? "" : "readonly"
                 ));
-            output.Content.AppendHtml(
-                    string.Format(@"<span data-valmsg-for=""{0}"" data-valmsg-replace=""true"" class=""text-danger field-validation-valid"">", ModelName + "." + FieldName)
-                );
 
             output.Attributes.Clear();
         }

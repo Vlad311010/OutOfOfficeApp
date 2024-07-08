@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OutOfOfficeWebApp.Models.Enums;
+using OutOfOfficeWebApp.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -37,6 +38,20 @@ namespace OutOfOfficeWebApp.Models
         [Required, ForeignKey("Role")]
         public int RoleId { get; set; }
         public Role Role { get; set; } = default!;
+
+        public Employee() { }
+        public Employee(EmployeeViewModel viewModel) 
+        {
+            ID = viewModel.ID;
+            FullName = viewModel.FullName;
+            SubdivisionId = viewModel.SubdivisionId;
+            PositionId = viewModel.PositionId;
+            StatusId = viewModel.StatusId;
+            PeoplePartnerId = viewModel.PeoplePartnerId;
+            OutOfOfficeBalance = viewModel.OutOfOfficeBalance;
+            Photo = viewModel.Photo;
+            RoleId = viewModel.RoleId;
+        }
     }
 
 

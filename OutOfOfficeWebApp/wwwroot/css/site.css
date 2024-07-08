@@ -52,11 +52,11 @@ td a:hover {
 }
 
 
-option:checked {
+select[multiple=multiple] option:checked {
     color:white;
     background-color: forestgreen;
 }
 
-option:not(:checked) {
+select[multiple=multiple] option:not(:checked) {
     color: gray;
 }
