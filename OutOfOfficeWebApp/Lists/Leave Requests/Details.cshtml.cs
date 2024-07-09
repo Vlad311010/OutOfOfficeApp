@@ -28,14 +28,14 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
         public async Task<IActionResult> OnGetAsync(int id)
         {
             LeaveRequest = await leaveRepo.GetById(id);
+            if (LeaveRequest == null)
+                return NotFound();
 
             var resource = new OwnedPageAuthorizationRequest { AllowedUsers = new List<int>() { LeaveRequest.EmployeeId } };
             var authorizationResult = await authorizationService.AuthorizeAsync(User, resource, "OwnerOrManager");
             if (!authorizationResult.Succeeded)
                 return Forbid();
 
-            if (LeaveRequest == null)
-                return NotFound();
 
             ApprovalRequestId = (await approveRepo.GetByLeaveRequest(LeaveRequest.ID)).ID;
 

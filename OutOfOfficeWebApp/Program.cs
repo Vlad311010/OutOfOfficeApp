@@ -11,9 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookieOptions => {
     cookieOptions.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    cookieOptions.LoginPath = "/";
+    cookieOptions.LoginPath = "/Index";
     cookieOptions.AccessDeniedPath = "/Forbidden";
-    cookieOptions.Cookie.SameSite = SameSiteMode.None;
+    
 
     cookieOptions.Events.OnRedirectToLogin = ctx =>
     {
@@ -21,6 +21,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         return Task.FromResult(0);
     };
 });
+
 
 // Add services to the container.
 builder.Services.AddRazorPages()
@@ -102,6 +103,17 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseStatusCodePages(context =>
+{
+    var response = context.HttpContext.Response;
+
+    if (response.StatusCode == StatusCodes.Status401Unauthorized)
+    {
+        response.Redirect("/forbidden");
+    }
+    return Task.CompletedTask;
+});
 
 
 app.MapRazorPages();

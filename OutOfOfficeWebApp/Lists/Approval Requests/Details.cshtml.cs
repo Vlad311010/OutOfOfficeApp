@@ -33,6 +33,8 @@ namespace OutOfOfficeWebApp.Lists.ApprovalRequests
         public async Task<IActionResult> OnGetAsync(int id)
         {
             ApprovalRequest = await approveRepo.GetById(id);
+            if (ApprovalRequest == null)
+                return NotFound();
             
             var resource = new OwnedPageAuthorizationRequest { AllowedUsers = new List<int>() { ApprovalRequest.LeaveRequest.EmployeeId } };
             var authorizationResult = await authorizationService.AuthorizeAsync(User, resource, "OwnerOrManager");
@@ -40,8 +42,6 @@ namespace OutOfOfficeWebApp.Lists.ApprovalRequests
                 return Forbid();
 
             Comment = ApprovalRequest.Comment ?? string.Empty;
-            if (ApprovalRequest == null)
-                return NotFound();
 
             return Page();
         }
