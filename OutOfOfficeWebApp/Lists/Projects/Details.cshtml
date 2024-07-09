@@ -22,7 +22,7 @@ else
                 <modelinput model="Project" field="@nameof(@Model.Project.StartDate)" value="@Model.Project.StartDate.ToString("yyyy.MM.dd")" editable="false"></modelinput>
                 <modelinput model="Project" field="@nameof(@Model.Project.EndDate)" value="@Model.Project.EndDate?.ToString("yyyy.MM.dd")" editable="false"></modelinput>
                 <modelinput model="Project" field="@nameof(@Model.Project.Status)" value="@Model.Project.Status" editable="false"></modelinput>
-                <modelinput model="Project" field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="false"></modelinput>
+                <modelinput textarea=true model="Project" field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="false"></modelinput>
             </div>
             
             <div class="form-group py-3">

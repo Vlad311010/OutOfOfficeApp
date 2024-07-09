@@ -23,7 +23,7 @@ else
                     <modelinput model="Project" field="@nameof(@Model.Project.StartDate)" value="@Model.Project.StartDate.ToString("yyyy.MM.dd")" editable="true"></modelinput>
                     <modelinput model="Project" field="@nameof(@Model.Project.EndDate)" value="@Model.Project.EndDate?.ToString("yyyy.MM.dd")" editable="true"></modelinput>
                     <modelselect model="Project" field="@nameof(@Model.Project.StatusId)" values="Model.StatusSelectors"></modelselect>
-                    <modelinput model="Project" field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="true"></modelinput>
+                    <modelinput textarea=true model="Project" field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="true"></modelinput>
 
                     <div class="form-group py-3">
                         <button type="submit" class="btn btn-primary w-100">Save</button>

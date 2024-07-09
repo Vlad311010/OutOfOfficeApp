@@ -22,7 +22,7 @@ else
                     <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.StartDate)" value="@Model.LeaveRequest.StartDate.ToString("yyyy.MM.dd")" editable="false"></modelinput>
                     <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.EndDate)" value="@Model.LeaveRequest.EndDate.ToString("yyyy.MM.dd")" editable="false"></modelinput>
                     <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Status)" value="@Model.LeaveRequest.Status" editable="false"></modelinput>
-                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Comment)" value="@Model.LeaveRequest.Comment" editable="false"></modelinput>
+                    <modelinput textarea=true model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Comment)" value="@Model.LeaveRequest.Comment" editable="false"></modelinput>
 
 
                     <div class="form-group py-3">

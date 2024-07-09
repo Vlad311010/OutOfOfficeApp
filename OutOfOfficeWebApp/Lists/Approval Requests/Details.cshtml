@@ -28,10 +28,10 @@ else
                     <modelinput model="ApprovalRequest" field="@nameof(@Model.ApprovalRequest.Approver)" value="@Model.ApprovalRequest.Approver.FullName" editable="false"></modelinput>
                     <modelinput model="ApprovalRequest" field="@nameof(@Model.ApprovalRequest.Status)" value="@Model.ApprovalRequest.Status" editable="false"></modelinput>
 
-                    @if (Model.ApprovalRequest.StatusId == (int)RequestStatusEnum.New)
+                    @if (User.IsInManagerRole() && Model.ApprovalRequest.StatusId == (int)RequestStatusEnum.New)
                     {
                         <form class="w-100" method="post">
-                            <modelinput model="" field="@nameof(@Model.Comment)" value="@Model.Comment" editable="true"></modelinput>
+                            <modelinput textarea=true model ="" field="@nameof(@Model.Comment)" value="@Model.Comment" editable="true"></modelinput>
                             <input type="hidden" id="IsApproved" asp-for="@Model.IsApproved" />
 
 
@@ -45,7 +45,7 @@ else
                         </form>
                     }
                     else {
-                        <modelinput model="" field="@nameof(@Model.Comment)" value="@Model.Comment" editable="false"></modelinput>
+                        <modelinput textarea=true model="" field="@nameof(@Model.Comment)" value="@Model.Comment" editable="false"></modelinput>
                         <a asp-page="/Leave Requests/Details" asp-route-id="@Model.ApprovalRequest.LeaveRequest.ID" class="btn btn-secondary w-100">Related Leave Request</a>
                     }
 

@@ -25,7 +25,7 @@ else
                     <modelinput model="Project" field="@nameof(@Model.Project.EndDate)" value="@Model.Project.EndDate?.ToString("yyyy.MM.dd")" editable="true"></modelinput>
                     <modelselect model="Project" field="@nameof(@Model.Project.StatusId)" values="Model.StatusSelectors"></modelselect>
                     <span asp-validation-for="@Model.Project.StatusId" class="text-danger"></span>
-                    <modelinput model="Project" field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="true"></modelinput>
+                    <modelinput textarea=true model ="Project" field="@nameof(@Model.Project.Comment)" value="@Model.Project.Comment" editable="true"></modelinput>
                     <span asp-validation-for="@Model.Project.Comment" class="text-danger"></span>
                     
                     <div class="form-group py-3">

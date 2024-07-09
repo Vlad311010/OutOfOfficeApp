@@ -23,8 +23,11 @@ else
                 <modelinput model="Employee" field="@nameof(@Model.Employee.Status)" value="@Model.Employee.Status" editable="false"></modelinput>
                 <modelinput model="Employee" field="@nameof(@Model.Employee.PeoplePartner)" value="@Model.Employee.PeoplePartner.FullName" editable="false"></modelinput>
                 <modelinput model="Employee" field="@nameof(@Model.Employee.OutOfOfficeBalance)" value="@Model.Employee.OutOfOfficeBalance" editable="false"></modelinput>
-                <!--Admin only-->
-                <modelinput model="Employee" field="@nameof(@Model.Employee.Role)" value="@Model.Employee.Role" editable="false"></modelinput>
+                
+                @if (User.IsInRole("Administrator"))
+                {
+                    <modelinput model="Employee" field="@nameof(@Model.Employee.Role)" value="@Model.Employee.Role" editable="false"></modelinput>
+                }
             </div>
             
             <div class="form-group py-3">

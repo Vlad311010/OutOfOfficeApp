@@ -35,13 +35,24 @@ namespace OutOfOfficeWebApp.TagHelpers
                     string.Format(@"<label for=""{0}"" class=""form-label"">{1}</label>", forValue, FieldName.SplitCamelCase())
                 );
 
-            output.Content.AppendHtml(
-                string.Format(@"<input id=""{0}"" name=""{1}"" type=""text"" class=""form-control"" value=""{2}"" {3}>",
+            if (TextArea)
+            {
+                output.Content.AppendFormat(@"<textarea rows=7 id=""{0}"" name=""{1}"" type=""text"" class=""form-control"" {2}>{3}</textarea>",
+                    forValue,
+                    nameValue,
+                    Editable ? "" : "readonly",
+                    FieldValue
+                );
+            }
+            else
+            {
+                output.Content.AppendFormat(@"<input id=""{0}"" name=""{1}"" type=""text"" class=""form-control"" value=""{2}"" {3}>",
                     forValue,
                     nameValue,
                     FieldValue,
                     Editable ? "" : "readonly"
-                ));
+                );
+            }
 
             output.Attributes.Clear();
         }

@@ -22,7 +22,7 @@ else
                     <modelselect model="LeaveRequest" field="@nameof(@Model.LeaveRequest.AbsenceReasonId)" values="@Model.AbsenceReasonSelector"></modelselect>
                     <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.StartDate)" value="@Model.LeaveRequest.StartDate.ToString("yyyy.MM.dd")" editable="true"></modelinput>
                     <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.EndDate)" value="@Model.LeaveRequest.EndDate.ToString("yyyy.MM.dd")" editable="true"></modelinput>
-                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Comment)" value="@Model.LeaveRequest.Comment" editable="true"></modelinput>
+                    <modelinput textarea=true model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Comment)" value="@Model.LeaveRequest.Comment" editable="true"></modelinput>
 
                     <ul>
                         <li><span asp-validation-for="@Model.LeaveRequest.EndDate" class="text-danger"></span></li>
