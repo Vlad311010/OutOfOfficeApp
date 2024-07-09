@@ -7,7 +7,8 @@ namespace OutOfOfficeWebApp.Models.Enums
         New = 1,
         Submitted = 2,
         Rejected = 3,
-        Approved = 4
+        Approved = 4,
+        Canceled = 5
     }
 
     public class RequestStatus : EnumTable<RequestStatusEnum>

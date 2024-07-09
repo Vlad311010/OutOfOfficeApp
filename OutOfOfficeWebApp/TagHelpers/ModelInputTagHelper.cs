@@ -26,8 +26,8 @@ namespace OutOfOfficeWebApp.TagHelpers
 
             output.TagName = @"div class=""mb-3""";
 
-            string forValue = ModelName + "_" + FieldName;
-            string nameValue = ModelName + "." + FieldName;
+            string forValue = string.IsNullOrEmpty(ModelName) ? FieldName : ModelName + "_" + FieldName;
+            string nameValue = string.IsNullOrEmpty(ModelName) ? FieldName : ModelName + "." + FieldName;
             output.Content.AppendHtml(
                     string.Format(@"<label for=""{0}"" class=""form-label"">{1}</label>", forValue, FieldName.SplitCamelCase())
                 );

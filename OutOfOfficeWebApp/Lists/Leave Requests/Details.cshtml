@@ -1,0 +1,38 @@
+﻿@page "/LeaveRequests/Details/{id}"
+@using OutOfOfficeWebApp.Models
+@model OutOfOfficeWebApp.Lists.LeaveRequests.DetailsModel
+@{
+    ViewData["Title"] = "LeaveRequests";
+}
+
+<h3>LeaveRequests Page</h3>
+
+@if (Model.LeaveRequest == null)
+{
+    <h3>Nothing Here</h3>
+}
+else 
+{
+    <div class="container mt-5 w-25">
+        <div class="row justify-content-center">
+            <div class="col form-container">
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.EmployeeId)" value="@Model.LeaveRequest.EmployeeId" editable="false"></modelinput>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Employee.FullName)" value="@Model.LeaveRequest.Employee.FullName" editable="false"></modelinput>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.AbsenceReason)" value="@Model.LeaveRequest.AbsenceReason" editable="false"></modelinput>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.StartDate)" value="@Model.LeaveRequest.StartDate.ToString("yyyy.MM.dd")" editable="false"></modelinput>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.EndDate)" value="@Model.LeaveRequest.EndDate.ToString("yyyy.MM.dd")" editable="false"></modelinput>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Status)" value="@Model.LeaveRequest.Status" editable="false"></modelinput>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Comment)" value="@Model.LeaveRequest.Comment" editable="false"></modelinput>
+
+
+                    <div class="form-group py-3">
+                        <a asp-page="/Approval Requests/Details" asp-route-id="@Model.ApprovalRequestId" class="btn btn-secondary w-100">Related Approval Request</a>
+                    </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

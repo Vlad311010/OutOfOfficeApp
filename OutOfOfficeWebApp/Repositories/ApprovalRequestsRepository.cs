@@ -16,7 +16,11 @@ namespace OutOfOfficeWebApp.Repositories
 
         public async Task<IEnumerable<ApprovalRequest>> All()
         {
-            return await context.ApprovalRequests.ToListAsync();
+            return await context.ApprovalRequests
+                .Include(r => r.Approver)
+                .Include(r => r.LeaveRequest)
+                .Include(r => r.Status)
+                .ToListAsync();
         }
 
         public async Task<ApprovalRequest> GetById(int requestId)
@@ -28,7 +32,15 @@ namespace OutOfOfficeWebApp.Repositories
                 .Include(r => r.Status)
                 .SingleAsync();
         }
-        
+
+        public async Task<ApprovalRequest> GetByLeaveRequest(int leaveRequestId)
+        {
+            return await context.ApprovalRequests
+                .Include(r => r.LeaveRequest)
+                .Where(r => r.LeaveRequestId == leaveRequestId)
+                .SingleAsync();
+        }
+
         public async Task<IEnumerable<ApprovalRequest>> FindById(string id)
         {
             return await context.ApprovalRequests
@@ -54,6 +66,16 @@ namespace OutOfOfficeWebApp.Repositories
                 .Include(r => r.LeaveRequest)
                 .Include(r => r.Status)
                 .ToListAsync();
+        }
+
+        public void Add(ApprovalRequest request)
+        {
+            context.ApprovalRequests.Add(request);
+        }
+
+        public async Task Save()
+        {
+            await context.SaveChangesAsync();
         }
     }
 }

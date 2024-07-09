@@ -1,4 +1,5 @@
 ﻿using OutOfOfficeWebApp.Models.Enums;
+using OutOfOfficeWebApp.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,5 +30,28 @@ namespace OutOfOfficeWebApp.Models
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }
         public RequestStatus Status { get; set; } = default!;
+
+        public LeaveRequest() { }
+
+        public LeaveRequest(LeaveRequestViewModel viewModel) 
+        {
+            EmployeeId = viewModel.EmployeeId;
+            AbsenceReasonId = viewModel.AbsenceReasonId;
+            StatusId = viewModel.StatusId;
+            StartDate = viewModel.StartDate;
+            EndDate = viewModel.EndDate;
+            Comment = viewModel.Comment;
+        }
+
+        public int RequireDays()
+        {
+            return LeaveRequest.RequireDays(StartDate, EndDate);
+        }
+
+        public static int RequireDays(DateTime start, DateTime end)
+        {
+            TimeSpan difference = end - start;
+            return difference.Days + 1;
+        }
     }
 }

@@ -1,7 +1,44 @@
 ﻿@page "/ApprovalRequests"
+@using OutOfOfficeWebApp.Models
 @model OutOfOfficeWebApp.Lists.ApprovalRequests.IndexModel
 @{
     ViewData["Title"] = "ApprovalRequests";
 }
 
 <h3>Approval Requests Page</h3>
+
+
+@if (Model.ApprovalRequests == null || Model.ApprovalRequests.Count() == 0)
+{
+    <h3>Nothing Here</h3>
+}
+else
+{
+    <div class="container mt-5">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr class="bg-black text-white">
+                    <th>ID ⇑</th>
+                    <th>Approver</th>
+                    <th>LeaveRequestId</th>
+                    <th>Status</th>
+                    <th class="borderless bg-white"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ApprovalRequest e in Model.ApprovalRequests)
+                {
+                    <tr>
+                        <td><a asp-page="/Approval Requests/Details" asp-route-id="@e.ID">@e.ID</a></td>
+                        <td><a asp-page="/Approval Requests/Details" asp-route-id="@e.ID">@e.Approver.FullName</a></td>
+                        <td><a asp-page="/Approval Requests/Details" asp-route-id="@e.ID">@e.LeaveRequestId</a></td>
+                        <td><a asp-page="/Approval Requests/Details" asp-route-id="@e.ID">@e.Status</a></td>
+                        <td class="borderless action">
+                            <a class="btn btn-primary btn-sm" asp-page="/Leave Requests/Details" asp-route-id="@e.LeaveRequestId">Leave Request►</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

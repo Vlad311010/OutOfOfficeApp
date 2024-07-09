@@ -1,4 +1,5 @@
 ﻿using OutOfOfficeWebApp.Models;
+using OutOfOfficeWebApp.ViewModels;
 
 namespace OutOfOfficeWebApp.Interfaces
 {
@@ -8,5 +9,7 @@ namespace OutOfOfficeWebApp.Interfaces
         Task<LeaveRequest> GetById(int requestId);
         Task<IEnumerable<LeaveRequest>> FindById(string id);
         Task<IEnumerable<LeaveRequest>> EmployeeReleatedRequest(int employeeId);
+        int Add(LeaveRequestViewModel request);
+        Task Save();
     }
 }

@@ -53,7 +53,7 @@ namespace OutOfOfficeWebApp.Lists.Employees
             Employee.StatusId = new ActiveStatus(ActiveStatusEnum.Active).Id;
             Employee.OutOfOfficeBalance = 0;
             Employee.RoleId = Position.AppropriateRole(Employee.PositionId).Id;
-            // ModelState.Clear();
+            
             if (!TryValidateModel(Employee) || Employee == null)
             {
                 await InitForm();

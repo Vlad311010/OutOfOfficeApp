@@ -1,0 +1,59 @@
+﻿@page "/ApprovalRequests/Details/{id}"
+@using OutOfOfficeWebApp.Models
+@using OutOfOfficeWebApp.Models.Enums
+@model OutOfOfficeWebApp.Lists.ApprovalRequests.DetailsModel
+@{
+    ViewData["Title"] = "ApprovalRequests";
+}
+
+@section Scripts {
+    <script>
+        function setAccepted(value) {
+            document.getElementById("IsApproved").value = value;
+        }
+    </script>
+}
+
+<h3>ApprovalRequests Page</h3>
+
+@if (Model.ApprovalRequest == null)
+{
+    <h3>Nothing Here</h3>
+}
+else 
+{
+    <div class="container mt-5 w-25">
+        <div class="row justify-content-center">
+            <div class="col form-container">
+                    <modelinput model="ApprovalRequest" field="@nameof(@Model.ApprovalRequest.Approver)" value="@Model.ApprovalRequest.Approver.FullName" editable="false"></modelinput>
+                    <modelinput model="ApprovalRequest" field="@nameof(@Model.ApprovalRequest.Status)" value="@Model.ApprovalRequest.Status" editable="false"></modelinput>
+
+                    @if (Model.ApprovalRequest.StatusId == (int)RequestStatusEnum.New)
+                    {
+                        <form class="w-100" method="post">
+                            <modelinput model="" field="@nameof(@Model.Comment)" value="@Model.Comment" editable="true"></modelinput>
+                            <input type="hidden" id="IsApproved" asp-for="@Model.IsApproved" />
+
+
+                            <div class="form-group py-3">
+                                <div class="d-flex py-2 gap-2">
+                                    <button type="submit" onclick="setAccepted(true)" class="btn btn-success w-100">Approve</button>
+                                    <button type="submit" onclick="setAccepted(false)" class="btn btn-danger w-100">Reject</button>
+                                </div>
+                                <a asp-page="/Leave Requests/Details" asp-route-id="@Model.ApprovalRequest.LeaveRequest.ID" class="btn btn-secondary w-100">Related Leave Request</a>
+                            </div>
+                        </form>
+                    }
+                    else {
+                        <modelinput model="" field="@nameof(@Model.Comment)" value="@Model.Comment" editable="false"></modelinput>
+                        <a asp-page="/Leave Requests/Details" asp-route-id="@Model.ApprovalRequest.LeaveRequest.ID" class="btn btn-secondary w-100">Related Leave Request</a>
+                    }
+
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

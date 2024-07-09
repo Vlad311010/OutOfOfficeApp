@@ -1,0 +1,46 @@
+﻿@page "/LeaveRequests/Add"
+@using OutOfOfficeWebApp.Models
+@model OutOfOfficeWebApp.Lists.LeaveRequests.AddModel
+@{
+    ViewData["Title"] = "LeaveRequests";
+}
+
+<h3>LeaveRequests Page</h3>
+
+@if (Model.LeaveRequest == null)
+{
+    <h3>Nothing Here</h3>
+}
+else 
+{
+    <div class="container mt-5 w-25">
+        <div class="row justify-content-center">
+            <div class="col form-container">
+                <form asp-page="/LeaveRequests/Add" method="post">
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.EmployeeId)" value="@Model.LeaveRequest.EmployeeId" editable="false"></modelinput>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.EmployeeName)" value="@Model.LeaveRequest.EmployeeName" editable="false"></modelinput>
+                    <modelselect model="LeaveRequest" field="@nameof(@Model.LeaveRequest.AbsenceReasonId)" values="@Model.AbsenceReasonSelector"></modelselect>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.StartDate)" value="@Model.LeaveRequest.StartDate.ToString("yyyy.MM.dd")" editable="true"></modelinput>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.EndDate)" value="@Model.LeaveRequest.EndDate.ToString("yyyy.MM.dd")" editable="true"></modelinput>
+                    <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Comment)" value="@Model.LeaveRequest.Comment" editable="true"></modelinput>
+
+
+                    <ul>
+                        <li><span asp-validation-for="@Model.LeaveRequest.EndDate" class="text-danger"></span></li>
+                        <li><span asp-validation-for="@Model.LeaveRequest.AbsenceReasonId" class="text-danger"></span></li>
+                    </ul>
+                    
+
+                    <div class="form-group py-3">
+                        <button type="submit" class="btn btn-primary w-100">Create</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
