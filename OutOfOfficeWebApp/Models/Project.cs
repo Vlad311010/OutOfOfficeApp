@@ -23,7 +23,8 @@ namespace OutOfOfficeWebApp.Models
         [Required, ForeignKey("ProjectManager")]
         public int ProjectManagerId { get; set; }
         public Employee ProjectManager { get; set; } = default!;
-
+        
+        [MaxLength(1000), Column(TypeName = "varchar")]
         public string? Comment { get; set; }
 
         [Required, ForeignKey("Status")]
