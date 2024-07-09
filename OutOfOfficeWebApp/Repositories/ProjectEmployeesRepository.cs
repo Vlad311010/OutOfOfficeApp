@@ -15,7 +15,10 @@ namespace OutOfOfficeWebApp.Repositories
 
         public async Task<IEnumerable<Project>> RelatedProjects(int employeeId)
         {
-            return await context.Projects.Where(p => context.ProjectEmployees.Where(record => record.EmployeeId == employeeId).Select(r => r.ProjectId).Contains(p.ID)).ToListAsync();
+            return await context.Projects
+                .Where(p => context.ProjectEmployees.Where(record => record.EmployeeId == employeeId).Select(r => r.ProjectId).Contains(p.ID))
+                .Include(p => p.ProjectType)
+                .ToListAsync();
         }
         public async Task<IEnumerable<Employee>> RelatedEmployees(int projectId)
         {

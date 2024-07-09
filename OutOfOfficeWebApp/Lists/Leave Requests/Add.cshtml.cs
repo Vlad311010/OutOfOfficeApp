@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using OutOfOfficeWebApp.Interfaces;
 using OutOfOfficeWebApp.Models;
 using OutOfOfficeWebApp.Models.Enums;
 using OutOfOfficeWebApp.ViewModels;
+using OutOfOfficeWebApp.Utils;
 
 namespace OutOfOfficeWebApp.Lists.LeaveRequests
 {
@@ -42,19 +40,9 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
             
         }
         
-        private async Task<Employee?> GetActiveEmployee()
-        {
-            var identificatorClaim = User.Claims.FirstOrDefault(c => c.Type == "Identificator");
-            if (identificatorClaim == null || String.IsNullOrEmpty(identificatorClaim.Value))
-                return null;
-
-            Employee loggedinEmployee = await employeeRepo.GetById(Int32.Parse(identificatorClaim.Value));
-            return loggedinEmployee;
-        }
-
         public async Task<ActionResult> OnGetAsync()
         {
-            Employee requester = await GetActiveEmployee();
+            Employee? requester = await User.GetActiveEmployee(employeeRepo);
             if (requester == null)  
                 return Unauthorized();
 
@@ -64,7 +52,7 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
 
         public async Task<ActionResult> OnPostAsync()
         {
-            Employee requester = await GetActiveEmployee();
+            Employee? requester = await User.GetActiveEmployee(employeeRepo);
             if (requester == null)
                 return Unauthorized();
 
@@ -72,12 +60,12 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
             int days = Models.LeaveRequest.RequireDays(LeaveRequest.StartDate, LeaveRequest.EndDate);
             bool validDates = LeaveRequest.EndDate >= LeaveRequest.StartDate;
 
-            if (requester.OutOfOfficeBalance <= days)
-            {
+            if (!validDates)
+                ModelState.AddModelError("LeaveRequest.EndDate", "Invalid Time Span");
+            else if (requester.OutOfOfficeBalance <= days)
                 ModelState.AddModelError("LeaveRequest.EndDate", "Insufficient Out Of Office Balance");
-            }
             
-            if (!TryValidateModel(LeaveRequest) || LeaveRequest == null || !validDates)
+            if (!TryValidateModel(LeaveRequest) || LeaveRequest == null)
             {
                 await InitForm(requester);
                 return Page();

@@ -27,29 +27,37 @@ else
                     <modelselect model="Employee" field="@nameof(@Model.Employee.StatusId)" values="Model.StatusSelectors"></modelselect>
                     <modelselect model="Employee" field="@nameof(@Model.Employee.PeoplePartnerId)" values="Model.HRSelectors"></modelselect>
                     <modelinput model="Employee" field="@nameof(@Model.Employee.OutOfOfficeBalance)" value="@Model.Employee.OutOfOfficeBalance" editable="true"></modelinput>
-                    <!--Admin only-->
-                    <modelselect model="Employee" field="@nameof(@Model.Employee.RoleId)" values="Model.RoleSelectors"></modelselect>
-                    
-                    <!--PM only-->
+
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <modelselect model="Employee" field="@nameof(@Model.Employee.RoleId)" values="Model.RoleSelectors"></modelselect>
+                    }
+                    else
+                    {
+                        <modelselect hidden=true model="Employee" field="@nameof(@Model.Employee.RoleId)" values="Model.RoleSelectors"></modelselect>
+                    }
+
                     
                     <modelinput model="" field="Assigned Projects" value="@assignedProjects" editable="false"></modelinput>
-                    
-                    <div class="form-group">
-                        <label for="AssignedProjects">Reassigne Projects (hold ctrl to select multiple items)</label>
-                        <select id="AssignedProjects" name="Employee.AssignedProjects" multiple="multiple" class="form-control">
-                            @foreach (var option in Model.ProjectSelectors)
-                            {
-                                @if (Model.AssignedProjects.Select(id => id.ToString()).Contains(option.Value))
+                    @if (User.IsInRole("ProjectManager")) 
+                    {
+                        <div class="form-group">
+                            <label for="AssignedProjects">Reassigne Projects (hold ctrl to select multiple items)</label>
+                            <select id="AssignedProjects" name="Employee.AssignedProjects" multiple="multiple" class="form-control">
+                                @foreach (var option in Model.ProjectSelectors)
                                 {
-                                    <option selected="selected" value="@option.Value">@option.Text</option>
+                                    @if (Model.AssignedProjects.Select(id => id.ToString()).Contains(option.Value))
+                                    {
+                                        <option selected="selected" value="@option.Value">@option.Text</option>
+                                    }
+                                    else 
+                                    {
+                                        <option value="@option.Value">@option.Text</option>
+                                    }
                                 }
-                                else 
-                                {
-                                    <option value="@option.Value">@option.Text</option>
-                                }
-                            }
-                        </select>
-                    </div>
+                            </select>
+                        </div>
+                    }
 
                     <div class="form-group py-3">
                         <button type="submit" class="btn btn-primary w-100">Save</button>

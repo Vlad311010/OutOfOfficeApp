@@ -12,7 +12,10 @@ namespace OutOfOfficeWebApp.Lists.Projects
     public class IndexModel : PageModel
     {
         private readonly IProjectsRepository projectsRepo;
-        
+        private readonly IProjectEmployeesRepository projectEmployeesRepo;
+        private readonly IEmployeesRepository employeesRepo;
+
+
         public IEnumerable<Project> Projects { get; private set; }
 
         public IEnumerable<SelectListItem> StatusSelectors { get; private set; }
@@ -20,16 +23,29 @@ namespace OutOfOfficeWebApp.Lists.Projects
 
         public string SearchValue { get; private set; }
 
-        public IndexModel(IProjectsRepository projectsRepo)
+        public IndexModel(IProjectsRepository projectsRepo, IProjectEmployeesRepository projectEmployeesRepo, IEmployeesRepository employeesRepo)
         {
             this.projectsRepo = projectsRepo;
+            this.projectEmployeesRepo = projectEmployeesRepo;
+            this.employeesRepo = employeesRepo;
             StatusSelectors = ActiveStatus.GetSelectList(-1, true);
             ProjectTypeSelectors = ProjectType.GetSelectList(-1, true);
         }
         
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Projects = await projectsRepo.All();
+            if (User.IsInManagerRole())
+                Projects = await projectsRepo.All();
+            else
+            {
+                Employee? currentEmployee = await User.GetActiveEmployee(employeesRepo);
+                if (currentEmployee == null)
+                    return Unauthorized();
+
+                Projects = await projectEmployeesRepo.RelatedProjects(currentEmployee.ID);
+            }
+
+            return Page();
         }
 
         public async Task OnGetFilterAsync(string id, int? TypeFilter, int? StatusFilter)

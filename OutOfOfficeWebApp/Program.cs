@@ -1,20 +1,17 @@
+using app.Authorization;
 using app.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using OutOfOfficeWebApp;
 using OutOfOfficeWebApp.Interfaces;
-using OutOfOfficeWebApp.Models;
-using OutOfOfficeWebApp.Models.Enums;
 using OutOfOfficeWebApp.Repositories;
-using OutOfOfficeWebApp.Utils;
-using System;
-using System.Reflection.Metadata;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookieOptions => {
     cookieOptions.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    cookieOptions.LoginPath = "/Login";
+    cookieOptions.LoginPath = "/";
     cookieOptions.AccessDeniedPath = "/Forbidden";
     cookieOptions.Cookie.SameSite = SameSiteMode.None;
 
@@ -30,13 +27,40 @@ builder.Services.AddRazorPages()
         .AddRazorPagesOptions(options =>
         {
             options.RootDirectory = "/Lists";
+
+            // Employees
+            options.Conventions.AuthorizeFolder("/Employees", "Manager");
+            options.Conventions.AuthorizePage("/Employees/Add", "HRManager");
+
+            // Projects
+            options.Conventions.AuthorizePage("/Projects/Add", "ProjectManager");
+            options.Conventions.AuthorizePage("/Projects/Edit", "ProjectManager");
+
         });
 
 
 builder.Services.AddAuthorization(options =>
 {
-    
+    options.AddPolicy("Manager", policy =>
+        policy.RequireRole(new string[] { "Administrator", "HRManager", "ProjectManager" })
+    );
+
+    options.AddPolicy("ProjectManager", policy =>
+        policy.RequireRole(new string[] { "Administrator", "ProjectManager" })
+    );
+
+    options.AddPolicy("HRManager", policy =>
+        policy.RequireRole(new string[] { "Administrator", "HRManager" })
+    );
+
+    options.AddPolicy("OwnerOrManager", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.Requirements.Add(new OwnerRequirement());
+    });
 });
+
+builder.Services.AddSingleton<IAuthorizationHandler, OwnerAuthorizationHandler>();
 
 builder.Services.AddScoped<IEmployeesRepository, EmployeesRepository>();
 builder.Services.AddScoped<IProjectsRepository, ProjectsRepository>();
