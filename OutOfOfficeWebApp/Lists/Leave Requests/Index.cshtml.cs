@@ -11,6 +11,7 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
     public class IndexModel : PageModel
     {
         private readonly ILeaveRequestsRepository leaveRequestsRepo;
+        private readonly IEmployeesRepository employeesRepo;
 
         public IEnumerable<LeaveRequest> LeaveRequests { get; private set; }
         // public IEnumerable<SelectListItem> EmployeeSelectors { get; private set; }
@@ -19,16 +20,28 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
 
         public string SearchValue { get; private set; }
 
-        public IndexModel(ILeaveRequestsRepository leaveRequestsRepo)
+        public IndexModel(ILeaveRequestsRepository leaveRequestsRepo, IEmployeesRepository employeesRepo)
         {
             this.leaveRequestsRepo = leaveRequestsRepo;
+            this.employeesRepo = employeesRepo;
             AbsenceReasonSelectors = AbsenceReason.GetSelectList(-1, true);
             StatusSelectors = ActiveStatus.GetSelectList(-1, true);
         }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            LeaveRequests = await leaveRequestsRepo.All();
+            if (User.IsInManagerRole())
+                LeaveRequests = await leaveRequestsRepo.All();
+            else
+            {
+                Employee? currentEmployee = await User.GetActiveEmployee(employeesRepo);
+                if (currentEmployee == null)
+                    return Unauthorized();
+
+                LeaveRequests = await leaveRequestsRepo.EmployeeReleatedRequest(currentEmployee.ID);
+            }
+
+            return Page();
         }
 
         public async Task OnGetFilterAsync(string id, int? AbsenceReasonFilter, int? StatusFilter)

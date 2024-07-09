@@ -65,6 +65,10 @@ td a:hover:not(.btn) {
     -webkit-transform: rotate(45deg);
 }
 
+li {
+    list-style-type: none;
+}
+
 
 select[multiple=multiple] option:checked {
     color:white;

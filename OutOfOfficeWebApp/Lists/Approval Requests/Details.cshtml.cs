@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,6 +14,7 @@ namespace OutOfOfficeWebApp.Lists.ApprovalRequests
         private readonly ILeaveRequestsRepository leaveRepo;
         private readonly IApprovalRequestsRepository approveRepo;
         private readonly IEmployeesRepository employeeRepo;
+        private readonly IAuthorizationService authorizationService;
 
         [BindProperty] public bool IsApproved { get; set; }
 
@@ -20,16 +22,23 @@ namespace OutOfOfficeWebApp.Lists.ApprovalRequests
 
         public ApprovalRequest ApprovalRequest { get; private set; }
 
-        public DetailsModel(ILeaveRequestsRepository leaveRepo, IApprovalRequestsRepository approveRepo, IEmployeesRepository employeeRepo)
+        public DetailsModel(ILeaveRequestsRepository leaveRepo, IApprovalRequestsRepository approveRepo, IEmployeesRepository employeeRepo, IAuthorizationService authorizationService)
         {
             this.leaveRepo = leaveRepo;
             this.approveRepo = approveRepo;
             this.employeeRepo = employeeRepo;
+            this.authorizationService = authorizationService;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
             ApprovalRequest = await approveRepo.GetById(id);
+            
+            var resource = new OwnedPageAuthorizationRequest { AllowedUsers = new List<int>() { ApprovalRequest.LeaveRequest.EmployeeId } };
+            var authorizationResult = await authorizationService.AuthorizeAsync(User, resource, "OwnerOrManager");
+            if (!authorizationResult.Succeeded)
+                return Forbid();
+
             Comment = ApprovalRequest.Comment ?? string.Empty;
             if (ApprovalRequest == null)
                 return NotFound();

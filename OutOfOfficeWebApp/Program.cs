@@ -36,6 +36,12 @@ builder.Services.AddRazorPages()
             options.Conventions.AuthorizePage("/Projects/Add", "ProjectManager");
             options.Conventions.AuthorizePage("/Projects/Edit", "ProjectManager");
 
+            // Leave Requests
+            options.Conventions.AuthorizePage("/Leave Requests/Add", "Employee");
+
+            // Approve Requests
+            options.Conventions.AuthorizePage("/Approval Requests/Index", "Manager");
+
         });
 
 
@@ -43,6 +49,10 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Manager", policy =>
         policy.RequireRole(new string[] { "Administrator", "HRManager", "ProjectManager" })
+    );
+
+    options.AddPolicy("Employee", policy =>
+        policy.RequireRole(new string[] { "Administrator", "Employee"})
     );
 
     options.AddPolicy("ProjectManager", policy =>

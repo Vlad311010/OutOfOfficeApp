@@ -24,7 +24,6 @@ else
                     <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.EndDate)" value="@Model.LeaveRequest.EndDate.ToString("yyyy.MM.dd")" editable="true"></modelinput>
                     <modelinput model="LeaveRequest" field="@nameof(@Model.LeaveRequest.Comment)" value="@Model.LeaveRequest.Comment" editable="true"></modelinput>
 
-
                     <ul>
                         <li><span asp-validation-for="@Model.LeaveRequest.EndDate" class="text-danger"></span></li>
                         <li><span asp-validation-for="@Model.LeaveRequest.AbsenceReasonId" class="text-danger"></span></li>

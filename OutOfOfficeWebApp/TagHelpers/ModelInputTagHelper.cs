@@ -16,7 +16,10 @@ namespace OutOfOfficeWebApp.TagHelpers
         
         [HtmlAttributeName("value")]
         public string FieldValue { get; set; }
-        
+
+        [HtmlAttributeName("textarea")]
+        public bool TextArea { get; set; } = false;
+
         [HtmlAttributeName("editable")]
         public bool Editable { get; set; }
 
@@ -31,6 +34,7 @@ namespace OutOfOfficeWebApp.TagHelpers
             output.Content.AppendHtml(
                     string.Format(@"<label for=""{0}"" class=""form-label"">{1}</label>", forValue, FieldName.SplitCamelCase())
                 );
+
             output.Content.AppendHtml(
                 string.Format(@"<input id=""{0}"" name=""{1}"" type=""text"" class=""form-control"" value=""{2}"" {3}>",
                     forValue,
