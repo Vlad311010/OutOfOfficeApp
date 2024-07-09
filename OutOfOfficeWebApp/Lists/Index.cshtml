@@ -10,13 +10,13 @@
         <div class="row justify-content-center">
             <div class="col form-container">
                 <h2 class="mb-4 text-center">Welcome</h2>
-                <modelfield field="@nameof(@Model.Employee.FullName)" value="@Model.Employee.FullName" editable="false"></modelfield>
-                <modelfield field="@nameof(@Model.Employee.ID)" value="@Model.Employee.ID" editable="false"></modelfield>
-                <modelfield field="@nameof(@Model.Employee.Position)" value="@Model.Employee.Position" editable="false"></modelfield>
-                <modelfield field="@nameof(@Model.Employee.PeoplePartner)" value="@Model.Employee.PeoplePartner.FullName" editable="false"></modelfield>
-                <modelfield field="@nameof(@Model.Employee.Subdivision)" value="@Model.Employee.Subdivision" editable="false"></modelfield>
-                <modelfield field="@nameof(@Model.Employee.OutOfOfficeBalance)" value="@Model.Employee.OutOfOfficeBalance" editable="false"></modelfield>
-                <modelfield field="@nameof(Model.Employee.Status)" value="@Model.Employee.Status" editable="false"></modelfield>
+                <modelinput model="Employee" field="@nameof(@Model.Employee.FullName)" value="@Model.Employee.FullName" editable="false"></modelinput>
+                <modelinput model="Employee" field="@nameof(@Model.Employee.ID)" value="@Model.Employee.ID" editable="false"></modelinput>
+                <modelinput model="Employee" field="@nameof(@Model.Employee.Position)" value="@Model.Employee.Position" editable="false"></modelinput>
+                <modelinput model="Employee" field="@nameof(@Model.Employee.PeoplePartner)" value="@Model.Employee.PeoplePartner.FullName" editable="false"></modelinput>
+                <modelinput model="Employee" field="@nameof(@Model.Employee.Subdivision)" value="@Model.Employee.Subdivision" editable="false"></modelinput>
+                <modelinput model="Employee" field="@nameof(@Model.Employee.OutOfOfficeBalance)" value="@Model.Employee.OutOfOfficeBalance" editable="false"></modelinput>
+                <modelinput model="Employee" field="@nameof(Model.Employee.Status)" value="@Model.Employee.Status" editable="false"></modelinput>
             </div>
         </div>
     </div>
