@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookieOptions => {
     cookieOptions.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    cookieOptions.LoginPath = "/Index";
+    cookieOptions.LoginPath = "/Forbidden";
     cookieOptions.AccessDeniedPath = "/Forbidden";
     
 
@@ -34,13 +34,16 @@ builder.Services.AddRazorPages()
             options.Conventions.AuthorizePage("/Employees/Add", "HRManager");
 
             // Projects
+            options.Conventions.AuthorizeFolder("/Projects");
             options.Conventions.AuthorizePage("/Projects/Add", "ProjectManager");
             options.Conventions.AuthorizePage("/Projects/Edit", "ProjectManager");
 
             // Leave Requests
+            options.Conventions.AuthorizeFolder("/Leave Requests");
             options.Conventions.AuthorizePage("/Leave Requests/Add", "Employee");
 
             // Approve Requests
+            options.Conventions.AuthorizeFolder("/Approval Requests");
             options.Conventions.AuthorizePage("/Approval Requests/Index", "Manager");
 
         });

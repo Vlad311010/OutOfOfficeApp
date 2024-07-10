@@ -5,9 +5,27 @@
     ViewData["Title"] = "ApprovalRequests";
 }
 
+@section scripts {
+    <script src="~/js/sort.js"></script>
+}
 <h3>Approval Requests Page</h3>
 
-
+<form asp-page="/Approval Requests/index" asp-page-handler="Filter" method="get">
+    <div class="input-group w-25">
+        <input type="hidden" name="handler" value="Filter" />
+        <input type="search" class="form-control rounded" name="id" value="@Model.SearchValue" placeholder="Search by Id" aria-label="Search" aria-describedby="search-addon" />
+        <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+    </div>
+    <div class="input-group py-3">
+        <div class="d-flex justify-content-between gap-3">
+            <modelselect model="" field="StatusFilter" values="Model.StatusSelectors"></modelselect>
+            <modelselect model="" field="ApproverFilter" values="Model.ApproverSelectors"></modelselect>
+            <div class="py-4">
+                <button type="submit" id="FilterBtn" name="FilterBtn" class="btn btn-outline-primary" data-mdb-ripple-init>Filter</button>
+            </div>
+        </div>
+    </div>
+</form>
 @if (Model.ApprovalRequests == null || Model.ApprovalRequests.Count() == 0)
 {
     <h3>Nothing Here</h3>

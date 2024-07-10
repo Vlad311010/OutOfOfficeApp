@@ -1,5 +1,6 @@
 ﻿@page "/LeaveRequests/Details/{id}"
 @using OutOfOfficeWebApp.Models
+@using OutOfOfficeWebApp.Models.Enums
 @model OutOfOfficeWebApp.Lists.LeaveRequests.DetailsModel
 @{
     ViewData["Title"] = "LeaveRequests";
@@ -28,6 +29,15 @@ else
                     <div class="form-group py-3">
                         <a asp-page="/Approval Requests/Details" asp-route-id="@Model.ApprovalRequestId" class="btn btn-secondary w-100">Related Approval Request</a>
                     </div>
+
+                    @if ((User.IsInRole("Employee") || User.IsInRole("Administrator") && Model.LeaveRequest.StatusId == (int)RequestStatusEnum.New))
+                    {
+                        <form asp class="w-100" method="post">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-danger w-100">Cancel</button>
+                            </div>
+                        </form>
+                    }
             </div>
         </div>
     </div>

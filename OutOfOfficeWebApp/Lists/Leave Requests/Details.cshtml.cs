@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OutOfOfficeWebApp.Interfaces;
 using OutOfOfficeWebApp.Models;
+using OutOfOfficeWebApp.Models.Enums;
 
 namespace OutOfOfficeWebApp.Lists.LeaveRequests
 {
@@ -42,7 +43,18 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
             return Page();
         }
 
-        
-            
+        public async Task<IActionResult> OnPostAsync(int id) // Cancel
+        {
+            LeaveRequest = await leaveRepo.GetById(id);
+            if (LeaveRequest == null)
+                return NotFound();
+
+            LeaveRequest.StatusId = (int)RequestStatusEnum.Canceled;
+            ApprovalRequest approvalRequest = await approveRepo.GetByLeaveRequest(id);
+            approvalRequest.StatusId = LeaveRequest.StatusId;
+            await approveRepo.Save();
+            return RedirectToPage();
+        }
+
     }
 }

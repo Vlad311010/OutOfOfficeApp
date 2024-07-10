@@ -31,20 +31,21 @@ namespace OutOfOfficeWebApp.Lists.Projects
             StatusSelectors = ActiveStatus.GetSelectList(-1, true);
             ProjectTypeSelectors = ProjectType.GetSelectList(-1, true);
         }
-        
-        public async Task<IActionResult> OnGetAsync()
+
+        private async Task<IEnumerable<Project>> GetProjects()
         {
             if (User.IsInManagerRole())
-                Projects = await projectsRepo.All();
+                return await projectsRepo.All();
             else
             {
-                Employee? currentEmployee = await User.GetActiveEmployee(employeesRepo);
-                if (currentEmployee == null)
-                    return Unauthorized();
-
-                Projects = await projectEmployeesRepo.RelatedProjects(currentEmployee.ID);
+                Employee currentEmployee = (await User.GetActiveEmployee(employeesRepo))!;
+                return await projectEmployeesRepo.RelatedProjects(currentEmployee.ID);
             }
+        }
 
+        public async Task<IActionResult> OnGetAsync()
+        {
+            Projects = await GetProjects();
             return Page();
         }
 
@@ -54,10 +55,9 @@ namespace OutOfOfficeWebApp.Lists.Projects
             ProjectTypeSelectors.SetSelectedOption(TypeFilter?.ToString());
             StatusSelectors.SetSelectedOption(StatusFilter?.ToString());
 
-            if (string.IsNullOrWhiteSpace(id))
-                Projects = await projectsRepo.All();
-            else 
-                Projects = await projectsRepo.FindById(id);
+            Projects = await GetProjects();
+            if (!string.IsNullOrWhiteSpace(id))
+                Projects = Projects.Where(p => p.ID.ToString().Contains(id));
 
             Projects = Projects.Where(p => 
                 (TypeFilter == null || p.ProjectTypeId == TypeFilter)

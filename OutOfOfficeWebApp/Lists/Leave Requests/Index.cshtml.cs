@@ -14,7 +14,7 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
         private readonly IEmployeesRepository employeesRepo;
 
         public IEnumerable<LeaveRequest> LeaveRequests { get; private set; }
-        // public IEnumerable<SelectListItem> EmployeeSelectors { get; private set; }
+        
         public IEnumerable<SelectListItem> AbsenceReasonSelectors { get; private set; }
         public IEnumerable<SelectListItem> StatusSelectors { get; private set; }
 
@@ -25,22 +25,25 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
             this.leaveRequestsRepo = leaveRequestsRepo;
             this.employeesRepo = employeesRepo;
             AbsenceReasonSelectors = AbsenceReason.GetSelectList(-1, true);
-            StatusSelectors = ActiveStatus.GetSelectList(-1, true);
+            StatusSelectors = RequestStatus.GetSelectList(-1, true);
+        }
+
+        private async Task<IEnumerable<LeaveRequest>> GetRequests()
+        {
+            if (User.IsInManagerRole())
+            {
+                return await leaveRequestsRepo.All();
+            }
+            else
+            {
+                Employee currentEmployee = (await User.GetActiveEmployee(employeesRepo))!;
+                return await leaveRequestsRepo.EmployeeReleatedRequest(currentEmployee.ID);
+            }
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if (User.IsInManagerRole())
-                LeaveRequests = await leaveRequestsRepo.All();
-            else
-            {
-                Employee? currentEmployee = await User.GetActiveEmployee(employeesRepo);
-                if (currentEmployee == null)
-                    return Unauthorized();
-
-                LeaveRequests = await leaveRequestsRepo.EmployeeReleatedRequest(currentEmployee.ID);
-            }
-
+            LeaveRequests = await GetRequests();
             return Page();
         }
 
@@ -50,10 +53,9 @@ namespace OutOfOfficeWebApp.Lists.LeaveRequests
             AbsenceReasonSelectors.SetSelectedOption(AbsenceReasonFilter.ToString());
             StatusSelectors.SetSelectedOption(StatusFilter.ToString());
 
-            if (string.IsNullOrWhiteSpace(id))
-                LeaveRequests = await leaveRequestsRepo.All();
-            else
-                LeaveRequests = await leaveRequestsRepo.FindById(id);
+            LeaveRequests = await GetRequests();
+            if (!string.IsNullOrWhiteSpace(id))
+                LeaveRequests = LeaveRequests.Where(r => r.ID.ToString().Contains(id));
 
             LeaveRequests = LeaveRequests.Where(p =>
                     (AbsenceReasonFilter == null || p.AbsenceReasonId == AbsenceReasonFilter)
