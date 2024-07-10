@@ -1,0 +1,439 @@
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+CREATE TABLE [AbsenceReasons] (
+    [Id] int NOT NULL,
+    [Name] nvarchar(50) NOT NULL,
+    CONSTRAINT [PK_AbsenceReasons] PRIMARY KEY ([Id])
+);
+GO
+
+CREATE TABLE [ActiveStatuses] (
+    [Id] int NOT NULL,
+    [Name] nvarchar(50) NOT NULL,
+    CONSTRAINT [PK_ActiveStatuses] PRIMARY KEY ([Id])
+);
+GO
+
+CREATE TABLE [Positions] (
+    [Id] int NOT NULL,
+    [Name] nvarchar(50) NOT NULL,
+    CONSTRAINT [PK_Positions] PRIMARY KEY ([Id])
+);
+GO
+
+CREATE TABLE [ProjectTypes] (
+    [Id] int NOT NULL,
+    [Name] nvarchar(50) NOT NULL,
+    CONSTRAINT [PK_ProjectTypes] PRIMARY KEY ([Id])
+);
+GO
+
+CREATE TABLE [RequestStatuses] (
+    [Id] int NOT NULL,
+    [Name] nvarchar(50) NOT NULL,
+    CONSTRAINT [PK_RequestStatuses] PRIMARY KEY ([Id])
+);
+GO
+
+CREATE TABLE [Roles] (
+    [Id] int NOT NULL,
+    [Name] nvarchar(50) NOT NULL,
+    CONSTRAINT [PK_Roles] PRIMARY KEY ([Id])
+);
+GO
+
+CREATE TABLE [Subdivisions] (
+    [Id] int NOT NULL,
+    [Name] nvarchar(50) NOT NULL,
+    CONSTRAINT [PK_Subdivisions] PRIMARY KEY ([Id])
+);
+GO
+
+CREATE TABLE [Employees] (
+    [ID] int NOT NULL IDENTITY,
+    [FullName] varchar(100) NOT NULL,
+    [SubdivisionId] int NOT NULL,
+    [PositionId] int NOT NULL,
+    [StatusId] int NOT NULL,
+    [PeoplePartnerId] int NOT NULL,
+    [OutOfOfficeBalance] int NOT NULL,
+    [Photo] varbinary(max) NULL,
+    [RoleId] int NOT NULL,
+    CONSTRAINT [PK_Employees] PRIMARY KEY ([ID]),
+    CONSTRAINT [FK_Employees_ActiveStatuses_StatusId] FOREIGN KEY ([StatusId]) REFERENCES [ActiveStatuses] ([Id]),
+    CONSTRAINT [FK_Employees_Employees_PeoplePartnerId] FOREIGN KEY ([PeoplePartnerId]) REFERENCES [Employees] ([ID]),
+    CONSTRAINT [FK_Employees_Positions_PositionId] FOREIGN KEY ([PositionId]) REFERENCES [Positions] ([Id]),
+    CONSTRAINT [FK_Employees_Roles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Roles] ([Id]),
+    CONSTRAINT [FK_Employees_Subdivisions_SubdivisionId] FOREIGN KEY ([SubdivisionId]) REFERENCES [Subdivisions] ([Id])
+);
+GO
+
+CREATE TABLE [LeaveRequests] (
+    [ID] int NOT NULL IDENTITY,
+    [EmployeeId] int NOT NULL,
+    [AbsenceReasonId] int NOT NULL,
+    [StartDate] Date NOT NULL,
+    [EndDate] Date NOT NULL,
+    [Comment] varchar(1000) NULL,
+    [StatusId] int NOT NULL,
+    CONSTRAINT [PK_LeaveRequests] PRIMARY KEY ([ID]),
+    CONSTRAINT [FK_LeaveRequests_AbsenceReasons_AbsenceReasonId] FOREIGN KEY ([AbsenceReasonId]) REFERENCES [AbsenceReasons] ([Id]),
+    CONSTRAINT [FK_LeaveRequests_Employees_EmployeeId] FOREIGN KEY ([EmployeeId]) REFERENCES [Employees] ([ID]),
+    CONSTRAINT [FK_LeaveRequests_RequestStatuses_StatusId] FOREIGN KEY ([StatusId]) REFERENCES [RequestStatuses] ([Id])
+);
+GO
+
+CREATE TABLE [Projects] (
+    [ID] int NOT NULL IDENTITY,
+    [ProjectTypeId] int NOT NULL,
+    [StartDate] Date NOT NULL,
+    [EndDate] Date NULL,
+    [ProjectManagerId] int NOT NULL,
+    [Comment] nvarchar(max) NULL,
+    [StatusId] int NOT NULL,
+    CONSTRAINT [PK_Projects] PRIMARY KEY ([ID]),
+    CONSTRAINT [FK_Projects_ActiveStatuses_StatusId] FOREIGN KEY ([StatusId]) REFERENCES [ActiveStatuses] ([Id]),
+    CONSTRAINT [FK_Projects_Employees_ProjectManagerId] FOREIGN KEY ([ProjectManagerId]) REFERENCES [Employees] ([ID]),
+    CONSTRAINT [FK_Projects_ProjectTypes_ProjectTypeId] FOREIGN KEY ([ProjectTypeId]) REFERENCES [ProjectTypes] ([Id])
+);
+GO
+
+CREATE TABLE [ApprovalRequests] (
+    [ID] int NOT NULL IDENTITY,
+    [ApproverId] int NOT NULL,
+    [LeaveRequestId] int NOT NULL,
+    [StatusId] int NOT NULL,
+    [Comment] varchar(1000) NULL,
+    CONSTRAINT [PK_ApprovalRequests] PRIMARY KEY ([ID]),
+    CONSTRAINT [FK_ApprovalRequests_Employees_ApproverId] FOREIGN KEY ([ApproverId]) REFERENCES [Employees] ([ID]),
+    CONSTRAINT [FK_ApprovalRequests_LeaveRequests_LeaveRequestId] FOREIGN KEY ([LeaveRequestId]) REFERENCES [LeaveRequests] ([ID]),
+    CONSTRAINT [FK_ApprovalRequests_RequestStatuses_StatusId] FOREIGN KEY ([StatusId]) REFERENCES [RequestStatuses] ([Id])
+);
+GO
+
+CREATE TABLE [ProjectEmployees] (
+    [ProjectId] int NOT NULL,
+    [EmployeeId] int NOT NULL,
+    CONSTRAINT [PK_ProjectEmployees] PRIMARY KEY ([ProjectId], [EmployeeId]),
+    CONSTRAINT [FK_ProjectEmployees_Employees_EmployeeId] FOREIGN KEY ([EmployeeId]) REFERENCES [Employees] ([ID]),
+    CONSTRAINT [FK_ProjectEmployees_Projects_ProjectId] FOREIGN KEY ([ProjectId]) REFERENCES [Projects] ([ID])
+);
+GO
+
+CREATE INDEX [IX_ApprovalRequests_ApproverId] ON [ApprovalRequests] ([ApproverId]);
+GO
+
+CREATE UNIQUE INDEX [IX_ApprovalRequests_LeaveRequestId] ON [ApprovalRequests] ([LeaveRequestId]);
+GO
+
+CREATE INDEX [IX_ApprovalRequests_StatusId] ON [ApprovalRequests] ([StatusId]);
+GO
+
+CREATE INDEX [IX_Employees_PeoplePartnerId] ON [Employees] ([PeoplePartnerId]);
+GO
+
+CREATE INDEX [IX_Employees_PositionId] ON [Employees] ([PositionId]);
+GO
+
+CREATE INDEX [IX_Employees_RoleId] ON [Employees] ([RoleId]);
+GO
+
+CREATE INDEX [IX_Employees_StatusId] ON [Employees] ([StatusId]);
+GO
+
+CREATE INDEX [IX_Employees_SubdivisionId] ON [Employees] ([SubdivisionId]);
+GO
+
+CREATE INDEX [IX_LeaveRequests_AbsenceReasonId] ON [LeaveRequests] ([AbsenceReasonId]);
+GO
+
+CREATE INDEX [IX_LeaveRequests_EmployeeId] ON [LeaveRequests] ([EmployeeId]);
+GO
+
+CREATE INDEX [IX_LeaveRequests_StatusId] ON [LeaveRequests] ([StatusId]);
+GO
+
+CREATE INDEX [IX_ProjectEmployees_EmployeeId] ON [ProjectEmployees] ([EmployeeId]);
+GO
+
+CREATE INDEX [IX_ProjectEmployees_ProjectId] ON [ProjectEmployees] ([ProjectId]);
+GO
+
+CREATE INDEX [IX_Projects_ProjectManagerId] ON [Projects] ([ProjectManagerId]);
+GO
+
+CREATE INDEX [IX_Projects_ProjectTypeId] ON [Projects] ([ProjectTypeId]);
+GO
+
+CREATE INDEX [IX_Projects_StatusId] ON [Projects] ([StatusId]);
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20240706113018_InitialMigration', N'8.0.6');
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] ON;
+INSERT INTO [AbsenceReasons] ([Id], [Name])
+VALUES (1, N'SickLeave');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] ON;
+INSERT INTO [AbsenceReasons] ([Id], [Name])
+VALUES (2, N'PersonalLeave');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] ON;
+INSERT INTO [AbsenceReasons] ([Id], [Name])
+VALUES (3, N'Vacation');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] ON;
+INSERT INTO [AbsenceReasons] ([Id], [Name])
+VALUES (4, N'UnpaidLeave');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] ON;
+INSERT INTO [AbsenceReasons] ([Id], [Name])
+VALUES (5, N'WorkFromHome');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[AbsenceReasons]'))
+    SET IDENTITY_INSERT [AbsenceReasons] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[ActiveStatuses]'))
+    SET IDENTITY_INSERT [ActiveStatuses] ON;
+INSERT INTO [ActiveStatuses] ([Id], [Name])
+VALUES (1, N'Incative');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[ActiveStatuses]'))
+    SET IDENTITY_INSERT [ActiveStatuses] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[ActiveStatuses]'))
+    SET IDENTITY_INSERT [ActiveStatuses] ON;
+INSERT INTO [ActiveStatuses] ([Id], [Name])
+VALUES (2, N'Active');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[ActiveStatuses]'))
+    SET IDENTITY_INSERT [ActiveStatuses] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Positions]'))
+    SET IDENTITY_INSERT [Positions] ON;
+INSERT INTO [Positions] ([Id], [Name])
+VALUES (1, N'Employee');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Positions]'))
+    SET IDENTITY_INSERT [Positions] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Positions]'))
+    SET IDENTITY_INSERT [Positions] ON;
+INSERT INTO [Positions] ([Id], [Name])
+VALUES (2, N'ProjectManager');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Positions]'))
+    SET IDENTITY_INSERT [Positions] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Positions]'))
+    SET IDENTITY_INSERT [Positions] ON;
+INSERT INTO [Positions] ([Id], [Name])
+VALUES (3, N'HRManager');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Positions]'))
+    SET IDENTITY_INSERT [Positions] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[ProjectTypes]'))
+    SET IDENTITY_INSERT [ProjectTypes] ON;
+INSERT INTO [ProjectTypes] ([Id], [Name])
+VALUES (1, N'Inner');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[ProjectTypes]'))
+    SET IDENTITY_INSERT [ProjectTypes] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[ProjectTypes]'))
+    SET IDENTITY_INSERT [ProjectTypes] ON;
+INSERT INTO [ProjectTypes] ([Id], [Name])
+VALUES (2, N'Commercial');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[ProjectTypes]'))
+    SET IDENTITY_INSERT [ProjectTypes] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] ON;
+INSERT INTO [RequestStatuses] ([Id], [Name])
+VALUES (1, N'New');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] ON;
+INSERT INTO [RequestStatuses] ([Id], [Name])
+VALUES (2, N'Submitted');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] ON;
+INSERT INTO [RequestStatuses] ([Id], [Name])
+VALUES (3, N'Rejected');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] ON;
+INSERT INTO [RequestStatuses] ([Id], [Name])
+VALUES (4, N'Approved');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] ON;
+INSERT INTO [RequestStatuses] ([Id], [Name])
+VALUES (5, N'Canceled');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[RequestStatuses]'))
+    SET IDENTITY_INSERT [RequestStatuses] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] ON;
+INSERT INTO [Roles] ([Id], [Name])
+VALUES (1, N'Employee');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] ON;
+INSERT INTO [Roles] ([Id], [Name])
+VALUES (2, N'ProjectManager');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] ON;
+INSERT INTO [Roles] ([Id], [Name])
+VALUES (3, N'HRManager');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] ON;
+INSERT INTO [Roles] ([Id], [Name])
+VALUES (4, N'Administrator');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Roles]'))
+    SET IDENTITY_INSERT [Roles] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Subdivisions]'))
+    SET IDENTITY_INSERT [Subdivisions] ON;
+INSERT INTO [Subdivisions] ([Id], [Name])
+VALUES (1, N'CustomerExperience');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Subdivisions]'))
+    SET IDENTITY_INSERT [Subdivisions] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Subdivisions]'))
+    SET IDENTITY_INSERT [Subdivisions] ON;
+INSERT INTO [Subdivisions] ([Id], [Name])
+VALUES (2, N'GlobalOperations');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Subdivisions]'))
+    SET IDENTITY_INSERT [Subdivisions] OFF;
+GO
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Subdivisions]'))
+    SET IDENTITY_INSERT [Subdivisions] ON;
+INSERT INTO [Subdivisions] ([Id], [Name])
+VALUES (3, N'InnovativeSolutions');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Name') AND [object_id] = OBJECT_ID(N'[Subdivisions]'))
+    SET IDENTITY_INSERT [Subdivisions] OFF;
+GO
+
+-- Disable foreign key constraints
+ALTER TABLE [dbo].[Employees] NOCHECK CONSTRAINT [FK_Employees_Employees_PeoplePartnerId];
+ALTER TABLE [dbo].[Projects] NOCHECK CONSTRAINT [FK_Projects_Employees_ProjectManagerId];
+
+DBCC CHECKIDENT ('Employees', RESEED, 1);
+DBCC CHECKIDENT ('Projects', RESEED, 1);
+
+INSERT INTO [dbo].[Employees] 
+    ([FullName], [SubdivisionId], [PositionId], [StatusId], [PeoplePartnerId], [OutOfOfficeBalance], [Photo], [RoleId])
+VALUES 
+    ('HR 0',       1,  3, 2, 1, 5,  NULL,  3),
+    ('HR 1',       2,  3, 2, 2, 5,  NULL,  3),
+    ('PM 0',       1,  2, 2, 1, 3,  NULL,  2),
+    ('PM 1',       2,  2, 2, 2, 3,  NULL,  2),
+    ('Employee 0', 1,  1, 2, 1, 10, NULL,  1),
+    ('Employee 1', 2,  1, 2, 2, 10, NULL,  1),
+    ('Employee 2', 1,  1, 1, 2, 0,  NULL,  1),
+    ('Admin 0',    1,  3, 2, 1, 0,  NULL,  4);
+
+
+INSERT INTO [dbo].[Projects] 
+    ([ProjectTypeId], [StartDate], [EndDate], [ProjectManagerId], [Comment], [StatusId])
+VALUES 
+    (1, '2024-01-01', '2024-12-31', 3, 'Project 1 Description', 2),
+    (1, '2024-01-01', '2024-12-31', 4, 'Project 2 Description', 2),
+    (2, '2023-01-01', '2023-12-31', 3, 'Project 3 Description', 1);
+
+
+-- Enable foreign key constraints
+ALTER TABLE [dbo].[Employees] CHECK CONSTRAINT [FK_Employees_Employees_PeoplePartnerId];
+ALTER TABLE [dbo].[Projects] CHECK CONSTRAINT [FK_Projects_Employees_ProjectManagerId];
+
+INSERT INTO [dbo].[ProjectEmployees] 
+    ([ProjectId], [EmployeeId])
+VALUES 
+    (1, 1),
+    (2, 2),
+    (1, 3),
+    (2, 4),
+    (1, 5),
+    (2, 6),
+    (1, 7),
+    (1, 8),
+
+    (3, 1),
+    (3, 3),
+    (3, 5);
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20240706113040_InitialData', N'8.0.6');
+GO
+
+COMMIT;
+GO
+
