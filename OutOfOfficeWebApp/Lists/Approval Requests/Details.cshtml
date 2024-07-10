@@ -4,6 +4,7 @@
 @model OutOfOfficeWebApp.Lists.ApprovalRequests.DetailsModel
 @{
     ViewData["Title"] = "ApprovalRequests";
+    int currentUserId = Int32.Parse(User.GetIdentifier());
 }
 
 @section Scripts {
@@ -28,7 +29,7 @@ else
                     <modelinput model="ApprovalRequest" field="@nameof(@Model.ApprovalRequest.Approver)" value="@Model.ApprovalRequest.Approver.FullName" editable="false"></modelinput>
                     <modelinput model="ApprovalRequest" field="@nameof(@Model.ApprovalRequest.Status)" value="@Model.ApprovalRequest.Status" editable="false"></modelinput>
 
-                    @if (User.IsInManagerRole() && Model.ApprovalRequest.StatusId == (int)RequestStatusEnum.New)
+                    @if ( (currentUserId == Model.ApprovalRequest.ApproverId || User.IsInRole("Administrator")) && Model.ApprovalRequest.StatusId == (int)RequestStatusEnum.New)
                     {
                         <form class="w-100" method="post">
                             <modelinput textarea=true model ="" field="@nameof(@Model.Comment)" value="@Model.Comment" editable="true"></modelinput>

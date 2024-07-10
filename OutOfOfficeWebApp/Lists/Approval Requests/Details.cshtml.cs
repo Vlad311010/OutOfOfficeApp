@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using OutOfOfficeWebApp.Interfaces;
 using OutOfOfficeWebApp.Models;
 using OutOfOfficeWebApp.Models.Enums;
+using OutOfOfficeWebApp.Utils;
 using System.ComponentModel.DataAnnotations;
 
 namespace OutOfOfficeWebApp.Lists.ApprovalRequests
@@ -81,9 +82,13 @@ namespace OutOfOfficeWebApp.Lists.ApprovalRequests
 
         public async Task<ActionResult> Reject(int id, string Comment)
         {
+            int currentUserId = Int32.Parse(User.GetIdentifier());
             ApprovalRequest = await approveRepo.GetById(id);
             if (ApprovalRequest == null)
                 return NotFound();
+
+            if (currentUserId != ApprovalRequest.ApproverId)
+                return Forbid();
 
             ApprovalRequest.Comment = Comment;
             ApprovalRequest.StatusId = (int)RequestStatusEnum.Rejected;
