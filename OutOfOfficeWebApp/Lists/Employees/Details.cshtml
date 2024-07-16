@@ -16,6 +16,15 @@ else
     <div class="container mt-5 w-25">
         <div class="row justify-content-center">
             <div class="col form-container">
+                @if (!string.IsNullOrEmpty(Model.EmployeePhotoBase64))
+                {
+                    <img class="img-fluid rounded mx-auto d-block py-3" src="data:image/jpeg;base64,@Model.EmployeePhotoBase64" alt="EmployeePhoto" />
+                }
+                else
+                {
+                    <img class="img-fluid rounded mx-auto d-block py-3" src="~/blank-profile-picture.png" alt="EmployeePhotoBlank" />
+                }
+
                 <modelinput model="Employee" field="@nameof(@Model.Employee.ID)" value="@Model.Employee.ID" editable="false"></modelinput>
                 <modelinput model="Employee" field="@nameof(@Model.Employee.FullName)" value="@Model.Employee.FullName" editable="false"></modelinput>
                 <modelinput model="Employee" field="@nameof(@Model.Employee.Subdivision)" value="@Model.Employee.Subdivision.ToString().SplitCamelCase()" editable="false"></modelinput>

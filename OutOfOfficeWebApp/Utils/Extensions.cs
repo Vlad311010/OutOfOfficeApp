@@ -74,5 +74,15 @@ namespace OutOfOfficeWebApp.Utils
             }
             return selectLists;
         }
+
+        public static IFormFile ToFormFile(this byte[] byteArray)
+        {
+            var stream = new MemoryStream(byteArray);
+            return new FormFile(stream, 0, byteArray.Length, null!, "formFile")
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image"
+            };
+        }
     }
 }
