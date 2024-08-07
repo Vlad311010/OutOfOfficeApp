@@ -1,7 +1,7 @@
 # Out Of Office Web Application
 
 ## 
-This project contains sample web application for employee management. More details described in [task description](TaskDescription.pdf)
+This project contains sample web application for employee management. More details described in [task description](TaskDescription.pdf)(download file)
 
 ## How To Launch
 1. Make sure you have installe .NET SDK and Entity Framework Core tools globally (`dotnet tool install --global dotnet-ef`).
