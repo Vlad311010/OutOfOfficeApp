@@ -1,5 +1,8 @@
 # Out Of Office Web Application
 
+## 
+This project contains sample web application for employee management. More details described in [task description](TaskDescription.pdf)
+
 ## How To Launch
 1. Make sure you have installe .NET SDK and Entity Framework Core tools globally (`dotnet tool install --global dotnet-ef`).
 2. In project folder open OutOfOfficeApp folder and run `dotnet ef database update`. This command will create database and populate it with initial data.
